@@ -164,8 +164,45 @@ export default function FeaturesGrid() {
             grid-auto-rows: minmax(200px, auto);
           }
           .bento-card.span-2 { grid-column: span 1; }
-          .span-2 .minor-visual { width: 140px; height: 100px; }
+          .bento-card.span-2 .card-content {
+            padding-right: 120px;
+          }
+          .span-2 .minor-visual {
+            width: 120px;
+            height: 120px;
+          }
+          .bento-card.span-2 h3 {
+            font-size: 20px !important;
+          }
           .card-content p { max-width: 100% !important; margin-bottom: 80px; }
+        }
+
+        @media (max-width: 520px) {
+          .bento-card,
+          .bento-card.span-2 {
+            min-height: 220px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+          }
+          .card-content,
+          .bento-card.span-2 .card-content {
+            padding-right: 0;
+          }
+          .minor-visual,
+          .span-2 .minor-visual {
+            position: relative;
+            width: min(100%, 220px);
+            height: 132px;
+            right: auto;
+            bottom: auto;
+            align-self: flex-end;
+            border-radius: 16px;
+          }
+          .card-content p {
+            margin-bottom: 0;
+          }
         }
       `}</style>
 
