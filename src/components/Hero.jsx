@@ -190,9 +190,9 @@ export default function Hero() {
               style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', boxShadow: '0 10px 30px rgba(255, 74, 74, 0.3)' }}>
               Join Waitlist &gt;
             </button>
-            <button className="btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
+            {/* <button className="btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
               <Play size={20} /> Watch Video
-            </button>
+            </button> */}
           </motion.div>
 
           {/* <motion.div
