@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import Hero from './components/Hero';
 import FeaturesGrid from './components/FeaturesGrid';
@@ -7,6 +7,8 @@ import MapDemo from './components/MapDemo';
 import PricingCards from './components/PricingCards';
 import FooterCTA from './components/FooterCTA';
 import Preloader from './components/Preloader';
+import LegalPage from './components/LegalPage';
+import { privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import './App.css';
 
 function App() {
@@ -14,6 +16,12 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY, scrollYProgress } = useScroll();
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+  const legalPolicy = currentPath === '/privacy-policy'
+    ? privacyPolicy
+    : currentPath === '/terms-and-conditions'
+      ? termsAndConditions
+      : null;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     // Transition navbar styles when scrolled past 20px
@@ -23,6 +31,10 @@ function App() {
       setIsScrolled(false);
     }
   });
+
+  if (legalPolicy) {
+    return <LegalPage policy={legalPolicy} />;
+  }
 
   return (
     <div className="app-container">

@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Footer() {
   return (
     <footer style={{ background: 'var(--mirage)', color: '#fff', padding: '4rem 2rem', width: '100%' }}>
@@ -19,7 +17,8 @@ export default function Footer() {
             <h4 style={{ marginBottom: '1rem' }}>Company</h4>
             <a href="#" style={{ color: '#999', textDecoration: 'none' }}>About</a>
             <a href="#" style={{ color: '#999', textDecoration: 'none' }}>Support</a>
-            <a href="#" style={{ color: '#999', textDecoration: 'none' }}>Privacy</a>
+            <a href="/privacy-policy" style={{ color: '#999', textDecoration: 'none' }}>Privacy Policy</a>
+            <a href="/terms-and-conditions" style={{ color: '#999', textDecoration: 'none' }}>Terms and Conditions</a>
           </div>
         </div>
       </div>

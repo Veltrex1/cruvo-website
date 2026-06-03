@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 export default function FooterCTA() {
   const [email, setEmail] = useState('');
@@ -301,7 +300,6 @@ export default function FooterCTA() {
               WebkitMaskImage: 'url("/logos/Fullstack - Onyx.svg")',
               WebkitMaskSize: 'contain',
               WebkitMaskRepeat: 'no-repeat',
-              WebkitMaskPosition: 'left',
               width: '130px',
               height: '28px',
               marginBottom: '1rem',
@@ -318,6 +316,11 @@ export default function FooterCTA() {
               <a href="#features" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Features</a>
               <a href="#how" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>How it works</a>
               <a href="#pricing" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Pricing</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <h4 style={{ marginBottom: '0.5rem', color: 'var(--onyx)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Legal</h4>
+              <a href="/privacy-policy" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Privacy Policy</a>
+              <a href="/terms-and-conditions" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Terms and Conditions</a>
             </div>
           </div>
 
