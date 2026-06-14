@@ -8,7 +8,7 @@ import PricingCards from './components/PricingCards';
 import FooterCTA from './components/FooterCTA';
 import Preloader from './components/Preloader';
 import LegalPage from './components/LegalPage';
-import { privacyPolicy, termsAndConditions } from './data/legalPolicies';
+import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import './App.css';
 
 function App() {
@@ -19,9 +19,11 @@ function App() {
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
   const legalPolicy = currentPath === '/privacy-policy'
     ? privacyPolicy
-    : currentPath === '/terms-and-conditions'
+    : currentPath === '/terms'
       ? termsAndConditions
-      : null;
+      : currentPath === '/eula'
+        ? eula
+        : null;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     // Transition navbar styles when scrolled past 20px

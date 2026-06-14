@@ -26,7 +26,7 @@ function renderLegalLine(line, index) {
 
 export default function LegalPage({ policy }) {
   const lines = policy.content.split(/\r?\n/);
-  const documentLines = lines.slice(3);
+  const documentLines = lines;
 
   return (
     <main className="legal-page">
@@ -310,9 +310,9 @@ export default function LegalPage({ policy }) {
           <a className="legal-nav-link" href="/">
             Home
           </a>
-          <a className="legal-nav-link" href={policy.alternateHref}>
-            {policy.alternateTitle}
-          </a>
+          <a className="legal-nav-link" href="/eula">EULA</a>
+          <a className="legal-nav-link" href="/terms">Terms</a>
+          <a className="legal-nav-link" href="/privacy-policy">Privacy</a>
         </div>
       </nav>
 
@@ -335,7 +335,7 @@ export default function LegalPage({ policy }) {
       <div className="legal-layout">
         <aside className="legal-aside">
           This page contains the official Cruvo {policy.title}. For questions, contact{" "}
-          <a href="mailto:info@cruvo.co">info@cruvo.co</a>.
+          <a href="mailto:hello@veltrex.ai">hello@veltrex.ai</a>.
         </aside>
 
         <motion.article
@@ -350,9 +350,7 @@ export default function LegalPage({ policy }) {
 
       <footer className="legal-footer">
         <span>&copy; {new Date().getFullYear()} Cruvo. All rights reserved.</span>
-        <a className="legal-nav-link" href={policy.alternateHref}>
-          View {policy.alternateTitle}
-        </a>
+        <span>Veltrex Solutions LLC</span>
       </footer>
     </main>
   );

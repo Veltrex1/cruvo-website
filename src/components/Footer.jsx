@@ -16,9 +16,10 @@ export default function Footer() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <h4 style={{ marginBottom: '1rem' }}>Company</h4>
             <a href="#" style={{ color: '#999', textDecoration: 'none' }}>About</a>
-            <a href="#" style={{ color: '#999', textDecoration: 'none' }}>Support</a>
+            <a href="mailto:hello@veltrex.ai" style={{ color: '#999', textDecoration: 'none' }}>Support</a>
             <a href="/privacy-policy" style={{ color: '#999', textDecoration: 'none' }}>Privacy Policy</a>
-            <a href="/terms-and-conditions" style={{ color: '#999', textDecoration: 'none' }}>Terms and Conditions</a>
+            <a href="/terms" style={{ color: '#999', textDecoration: 'none' }}>Terms and Conditions</a>
+            <a href="/eula" style={{ color: '#999', textDecoration: 'none' }}>Terms of Use (EULA)</a>
           </div>
         </div>
       </div>

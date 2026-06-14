@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/eula",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/eula/",
+      "destination": "/index.html"
+    },
+    {
       "source": "/privacy-policy",
       "destination": "/index.html"
     },
@@ -9,11 +17,11 @@
       "destination": "/index.html"
     },
     {
-      "source": "/terms-and-conditions",
+      "source": "/terms",
       "destination": "/index.html"
     },
     {
-      "source": "/terms-and-conditions/",
+      "source": "/terms/",
       "destination": "/index.html"
     }
   ]
