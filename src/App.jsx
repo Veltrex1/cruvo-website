@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import Hero from './components/Hero';
 import FeaturesGrid from './components/FeaturesGrid';
@@ -8,8 +8,11 @@ import PricingCards from './components/PricingCards';
 import FooterCTA from './components/FooterCTA';
 import Preloader from './components/Preloader';
 import LegalPage from './components/LegalPage';
+import SupportPage from './components/SupportPage';
 import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import './App.css';
+
+const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support'];
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,6 +28,12 @@ function App() {
         ? eula
         : null;
 
+  useEffect(() => {
+    if (!KNOWN_ROUTES.includes(currentPath)) {
+      window.location.replace('/');
+    }
+  }, [currentPath]);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     // Transition navbar styles when scrolled past 20px
     if (latest > 20) {
@@ -36,6 +45,10 @@ function App() {
 
   if (legalPolicy) {
     return <LegalPage policy={legalPolicy} />;
+  }
+
+  if (currentPath === '/support') {
+    return <SupportPage />;
   }
 
   return (
@@ -211,3 +224,4 @@ function App() {
 }
 
 export default App;
+

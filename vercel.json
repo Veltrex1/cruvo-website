@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/support",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/support/",
+      "destination": "/index.html"
+    },
+    {
       "source": "/eula",
       "destination": "/index.html"
     },
@@ -22,6 +30,10 @@
     },
     {
       "source": "/terms/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
