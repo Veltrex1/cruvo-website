@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AppStoreBadgeLink from './AppStoreBadgeLink';
 
 export default function FooterCTA() {
   const [email, setEmail] = useState('');
@@ -100,6 +101,26 @@ export default function FooterCTA() {
           cursor: pointer;
           white-space: nowrap;
         }
+        .community-download-row {
+          margin-top: 18px;
+          display: flex;
+          align-items: center;
+        }
+        .footer-app-store-link {
+          display: inline-flex;
+          align-items: center;
+          line-height: 0;
+          transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .footer-app-store-link:hover {
+          transform: translateY(-2px);
+          filter: drop-shadow(0 14px 30px rgba(0,0,0,0.32));
+        }
+        .footer-app-store-badge {
+          display: block;
+          width: 168px;
+          height: auto;
+        }
         .perks-list {
           list-style: none;
           margin: 0;
@@ -155,6 +176,12 @@ export default function FooterCTA() {
           .community-btn {
             width: 100%;
             padding: 16px 22px;
+          }
+          .community-download-row {
+            justify-content: center;
+          }
+          .footer-app-store-badge {
+            width: 160px;
           }
           .perk-item {
             border-radius: 20px;
@@ -237,6 +264,13 @@ export default function FooterCTA() {
                 </button>
               </form>
             )}
+
+            <div className="community-download-row">
+              <AppStoreBadgeLink
+                className="footer-app-store-link"
+                imageClassName="footer-app-store-badge"
+              />
+            </div>
             
             {status === 'error' && (
               <div style={{ color: 'var(--coral-red)', fontSize: '0.9rem', marginTop: '10px' }}>

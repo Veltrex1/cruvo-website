@@ -1,17 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import PhoneMockup from './PhoneMockup';
-import appStoreBadge from '../assets/Download_on_the_App_Store_Badge.svg';
-
-const APP_STORE_URL = 'https://apps.apple.com/us/app/cruvo/id6774693070';
-const APP_STORE_IOS_URL = 'itms-apps://itunes.apple.com/app/id6774693070';
-
-function isAppleMobileDevice() {
-  if (typeof navigator === 'undefined') return false;
-
-  return /iPad|iPhone|iPod/.test(navigator.userAgent)
-    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
+import AppStoreBadgeLink from './AppStoreBadgeLink';
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -27,19 +17,6 @@ export default function Hero() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
-
-  const handleAppStoreClick = (event) => {
-    if (!isAppleMobileDevice()) return;
-
-    event.preventDefault();
-    window.location.href = APP_STORE_IOS_URL;
-
-    window.setTimeout(() => {
-      if (!document.hidden) {
-        window.location.href = APP_STORE_URL;
-      }
-    }, 900);
-  };
 
   return (
     <section id="hero" ref={heroRef} style={{
@@ -225,18 +202,10 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="hero-buttons"
           >
-            <a
+            <AppStoreBadgeLink
               className="app-store-badge-link"
-              href={APP_STORE_URL}
-              onClick={handleAppStoreClick}
-              aria-label="Download Cruvo on the App Store"
-            >
-              <img
-                className="app-store-badge"
-                src={appStoreBadge}
-                alt="Download on the App Store"
-              />
-            </a>
+              imageClassName="app-store-badge"
+            />
             {/* <button className="btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
               <Play size={20} /> Watch Video
             </button> */}

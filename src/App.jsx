@@ -9,6 +9,7 @@ import FooterCTA from './components/FooterCTA';
 import Preloader from './components/Preloader';
 import LegalPage from './components/LegalPage';
 import SupportPage from './components/SupportPage';
+import AppStoreBadgeLink from './components/AppStoreBadgeLink';
 import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import './App.css';
 
@@ -141,6 +142,11 @@ function App() {
             </ul>
 
             <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <AppStoreBadgeLink
+                className="desktop-nav-links nav-app-store-link"
+                imageClassName="nav-app-store-badge"
+              />
+
               {/* Hamburger Button (Mobile Only) */}
               <button 
                 className="mobile-menu-btn"
