@@ -1,7 +1,17 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Play, Star } from 'lucide-react';
 import PhoneMockup from './PhoneMockup';
+import appStoreBadge from '../assets/Download_on_the_App_Store_Badge.svg';
+
+const APP_STORE_URL = 'https://apps.apple.com/us/app/cruvo/id6774693070';
+const APP_STORE_IOS_URL = 'itms-apps://itunes.apple.com/app/id6774693070';
+
+function isAppleMobileDevice() {
+  if (typeof navigator === 'undefined') return false;
+
+  return /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -17,6 +27,19 @@ export default function Hero() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+
+  const handleAppStoreClick = (event) => {
+    if (!isAppleMobileDevice()) return;
+
+    event.preventDefault();
+    window.location.href = APP_STORE_IOS_URL;
+
+    window.setTimeout(() => {
+      if (!document.hidden) {
+        window.location.href = APP_STORE_URL;
+      }
+    }, 900);
+  };
 
   return (
     <section id="hero" ref={heroRef} style={{
@@ -89,6 +112,21 @@ export default function Hero() {
           align-items: center;
           margin-bottom: 4rem;
         }
+        .app-store-badge-link {
+          display: inline-flex;
+          align-items: center;
+          line-height: 0;
+          transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .app-store-badge-link:hover {
+          transform: translateY(-2px);
+          filter: drop-shadow(0 12px 28px rgba(0,0,0,0.35));
+        }
+        .app-store-badge {
+          display: block;
+          width: 180px;
+          height: auto;
+        }
         @media (max-width: 1024px) {
           .hero-content-wrapper {
             flex-direction: column;
@@ -117,6 +155,9 @@ export default function Hero() {
           .hero-buttons {
             flex-wrap: nowrap;
             justify-content: center;
+          }
+          .app-store-badge {
+            width: 160px;
           }
           .hero-buttons button {
             padding: 0.8rem 1.2rem !important;
@@ -184,12 +225,18 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="hero-buttons"
           >
-            <button
-              className="btn-primary"
-              onClick={() => document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })}
-              style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', boxShadow: '0 10px 30px rgba(255, 74, 74, 0.3)' }}>
-              Join Waitlist &gt;
-            </button>
+            <a
+              className="app-store-badge-link"
+              href={APP_STORE_URL}
+              onClick={handleAppStoreClick}
+              aria-label="Download Cruvo on the App Store"
+            >
+              <img
+                className="app-store-badge"
+                src={appStoreBadge}
+                alt="Download on the App Store"
+              />
+            </a>
             {/* <button className="btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
               <Play size={20} /> Watch Video
             </button> */}

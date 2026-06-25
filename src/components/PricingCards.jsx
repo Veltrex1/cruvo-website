@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 
@@ -91,7 +90,7 @@ export default function PricingCards() {
                 color: tier.popular ? '#fff' : 'var(--onyx)'
               }}
             >
-              {tier.popular ? "Join Waitlist" : "Get Started"}
+              {tier.popular ? "Get Cruvo Pro" : "Get Started"}
             </button>
           </motion.div>
         ))}

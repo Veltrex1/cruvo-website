@@ -141,13 +141,6 @@ function App() {
             </ul>
 
             <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-              <button 
-                className="btn-primary desktop-nav-links" 
-                onClick={() => document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })}
-                style={{ padding: "10px 18px", fontSize: 14, borderRadius: 999, border: 'none', background: 'var(--coral-red)', color: '#fff', fontWeight: 600, cursor: 'pointer' }}>
-                Join waitlist
-              </button>
-              
               {/* Hamburger Button (Mobile Only) */}
               <button 
                 className="mobile-menu-btn"
@@ -196,15 +189,6 @@ function App() {
                   {i.label}
                 </a>
               ))}
-              <button 
-                className="btn-primary" 
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                style={{ marginTop: '1rem', padding: "14px 32px", fontSize: '1.1rem', borderRadius: 999, border: 'none', background: 'var(--coral-red)', color: '#fff', fontWeight: 700, width: '100%' }}>
-                Join waitlist
-              </button>
             </motion.div>
           )}
         </AnimatePresence>
@@ -224,4 +208,3 @@ function App() {
 }
 
 export default App;
-

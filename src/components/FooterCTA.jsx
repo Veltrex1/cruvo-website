@@ -41,12 +41,12 @@ export default function FooterCTA() {
     <footer style={{ background: '#ffffff', color: 'var(--onyx)', position: 'relative', overflow: 'hidden', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
 
       <style>{`
-        .waitlist-container {
+        .community-container {
           padding: 4rem 2rem;
           display: flex;
           justify-content: center;
         }
-        .waitlist-card {
+        .community-card {
           position: relative;
           background: linear-gradient(135deg, #0F2A2B 0%, #0A1E1F 100%);
           color: #fff;
@@ -61,7 +61,7 @@ export default function FooterCTA() {
           max-width: 1400px;
           box-shadow: 0 30px 60px rgba(0,0,0,0.15);
         }
-        .waitlist-heading {
+        .community-heading {
           font-size: 3rem;
           font-weight: 800;
           letter-spacing: -1px;
@@ -69,7 +69,7 @@ export default function FooterCTA() {
           margin: 0;
           font-family: var(--font-axiforma);
         }
-        .waitlist-form {
+        .community-form {
           margin-top: 28px;
           display: flex;
           gap: 8px;
@@ -79,7 +79,7 @@ export default function FooterCTA() {
           border-radius: 999px;
           padding: 6px;
         }
-        .waitlist-input {
+        .community-input {
           flex: 1;
           background: transparent;
           border: 0;
@@ -89,7 +89,7 @@ export default function FooterCTA() {
           font-size: 0.95rem;
           padding: 0 16px;
         }
-        .waitlist-btn {
+        .community-btn {
           padding: 12px 22px;
           font-size: 0.95rem;
           background: var(--coral-red);
@@ -130,29 +130,29 @@ export default function FooterCTA() {
           gap: 2rem;
         }
         @media (max-width: 768px) {
-          .waitlist-container {
+          .community-container {
             padding: 2rem 1rem;
           }
-          .waitlist-card {
+          .community-card {
             padding: 2rem 1.5rem;
             gap: 2rem;
           }
-          .waitlist-heading {
+          .community-heading {
             font-size: 2.2rem;
           }
-          .waitlist-form {
+          .community-form {
             flex-direction: column;
             background: transparent;
             border: none;
             padding: 0;
           }
-          .waitlist-input {
+          .community-input {
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.12);
             border-radius: 999px;
             padding: 16px 20px;
           }
-          .waitlist-btn {
+          .community-btn {
             width: 100%;
             padding: 16px 22px;
           }
@@ -174,9 +174,9 @@ export default function FooterCTA() {
         }
       `}</style>
 
-      {/* Dark Theme Waitlist CTA */}
-      <div id="waitlist" className="waitlist-container">
-        <div className="waitlist-card">
+      {/* Dark Theme Community CTA */}
+      <div id="community" className="community-container">
+        <div className="community-card">
           {/* Background ride lines */}
           <svg viewBox="0 0 1280 600" preserveAspectRatio="xMidYMid slice" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.15 }}>
             <defs>
@@ -206,34 +206,34 @@ export default function FooterCTA() {
               fontSize: '0.75rem', fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase"
             }}>
               <span style={{ background: "var(--coral-red)", width: '8px', height: '8px', borderRadius: '50%' }} />
-              Be the first to ride
+              Join the community
             </div>
-            <h2 className="waitlist-heading">
-              Join the waitlist.<br />
-              <span style={{ color: "var(--coral-red)" }}>Get early access.</span>
+            <h2 className="community-heading">
+              Join the ride.<br />
+              <span style={{ color: "var(--coral-red)" }}>Stay close to Cruvo.</span>
             </h2>
             <p style={{ marginTop: '20px', fontSize: '1.1rem', color: "rgba(255,255,255,0.7)", maxWidth: '480px', lineHeight: 1.6 }}>
-              Cruvo is launching soon. Sign up now and be the first to ride the future of group rides with founding-member perks locked in.
+              Get route ideas, product drops, rider stories, and the updates that help you get more out of every group ride.
             </p>
 
             {status === 'success' ? (
               <div style={{ marginTop: '20px', padding: '16px', background: 'rgba(104, 198, 112, 0.1)', border: '1px solid rgba(104, 198, 112, 0.2)', borderRadius: '12px', color: '#68C670', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                <span style={{ fontWeight: 600 }}>You're on the list! We'll be in touch soon.</span>
+                <span style={{ fontWeight: 600 }}>You're in. We'll send the next Cruvo update soon.</span>
               </div>
             ) : (
-              <form className="waitlist-form" onSubmit={handleSubmit}>
+              <form className="community-form" onSubmit={handleSubmit}>
                 <input 
                   type="email" 
                   placeholder="Enter your email address" 
                   required 
-                  className="waitlist-input"
+                  className="community-input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={status === 'loading'}
                 />
-                <button type="submit" className="waitlist-btn" disabled={status === 'loading'} style={{ opacity: status === 'loading' ? 0.7 : 1 }}>
-                  {status === 'loading' ? 'Joining...' : 'Join waitlist →'}
+                <button type="submit" className="community-btn" disabled={status === 'loading'} style={{ opacity: status === 'loading' ? 0.7 : 1 }}>
+                  {status === 'loading' ? 'Joining...' : 'Join us →'}
                 </button>
               </form>
             )}
@@ -255,7 +255,7 @@ export default function FooterCTA() {
                 ))}
               </div>
               <div style={{ fontSize: '0.85rem', color: "rgba(255,255,255,0.7)" }}>
-                <span style={{ color: "#fff", fontWeight: 700 }}>3,408+ riders</span> are waiting. Join them.
+                <span style={{ color: "#fff", fontWeight: 700 }}>3,408+ riders</span> are part of the Cruvo community.
               </div>
             </div>
           </div>
@@ -264,10 +264,10 @@ export default function FooterCTA() {
           <div style={{ position: "relative", zIndex: 2, flex: '1 1 350px' }}>
             <ul className="perks-list">
               {[
-                ["Early access", "Ride the app months before launch"],
-                ["Launch updates", "Behind-the-scenes from the team"],
-                ["Exclusive rewards", "Founding-rider badge & coins"],
-                ["Help shape Cruvo", "Direct line to product"],
+                ["Route ideas", "Fresh places and weekend ride inspiration"],
+                ["Product drops", "New Cruvo features as they land"],
+                ["Rider stories", "Community highlights from the road"],
+                ["Cruvo updates", "Useful notes from the team"],
               ].map(([t, s]) => (
                 <li key={t} className="perk-item">
                   <div style={{
