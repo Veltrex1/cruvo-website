@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import PhoneMockup from './PhoneMockup';
 import AppStoreBadgeLink from './AppStoreBadgeLink';
+import GooglePlayBadgeLink from './GooglePlayBadgeLink';
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -87,21 +88,27 @@ export default function Hero() {
           display: flex;
           gap: 1rem;
           align-items: center;
+          flex-wrap: wrap;
           margin-bottom: 4rem;
         }
-        .app-store-badge-link {
+        .store-badge-link {
           display: inline-flex;
           align-items: center;
           line-height: 0;
           transition: transform 0.2s ease, filter 0.2s ease;
         }
-        .app-store-badge-link:hover {
+        .store-badge-link:hover {
           transform: translateY(-2px);
           filter: drop-shadow(0 12px 28px rgba(0,0,0,0.35));
         }
         .app-store-badge {
           display: block;
           width: 180px;
+          height: auto;
+        }
+        .google-play-badge {
+          display: block;
+          width: 202px;
           height: auto;
         }
         @media (max-width: 1024px) {
@@ -130,11 +137,15 @@ export default function Hero() {
             margin-right: auto;
           }
           .hero-buttons {
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 0.75rem;
           }
           .app-store-badge {
-            width: 160px;
+            width: 145px;
+          }
+          .google-play-badge {
+            width: 163px;
           }
           .hero-buttons button {
             padding: 0.8rem 1.2rem !important;
@@ -203,8 +214,12 @@ export default function Hero() {
             className="hero-buttons"
           >
             <AppStoreBadgeLink
-              className="app-store-badge-link"
+              className="store-badge-link"
               imageClassName="app-store-badge"
+            />
+            <GooglePlayBadgeLink
+              className="store-badge-link"
+              imageClassName="google-play-badge"
             />
             {/* <button className="btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
               <Play size={20} /> Watch Video

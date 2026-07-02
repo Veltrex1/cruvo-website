@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AppStoreBadgeLink from './AppStoreBadgeLink';
+import GooglePlayBadgeLink from './GooglePlayBadgeLink';
 
 export default function FooterCTA() {
   const [email, setEmail] = useState('');
@@ -105,20 +106,27 @@ export default function FooterCTA() {
           margin-top: 18px;
           display: flex;
           align-items: center;
+          flex-wrap: wrap;
+          gap: 12px;
         }
-        .footer-app-store-link {
+        .footer-store-link {
           display: inline-flex;
           align-items: center;
           line-height: 0;
           transition: transform 0.2s ease, filter 0.2s ease;
         }
-        .footer-app-store-link:hover {
+        .footer-store-link:hover {
           transform: translateY(-2px);
           filter: drop-shadow(0 14px 30px rgba(0,0,0,0.32));
         }
         .footer-app-store-badge {
           display: block;
           width: 168px;
+          height: auto;
+        }
+        .footer-google-play-badge {
+          display: block;
+          width: 189px;
           height: auto;
         }
         .perks-list {
@@ -181,7 +189,10 @@ export default function FooterCTA() {
             justify-content: center;
           }
           .footer-app-store-badge {
-            width: 160px;
+            width: 148px;
+          }
+          .footer-google-play-badge {
+            width: 166px;
           }
           .perk-item {
             border-radius: 20px;
@@ -267,8 +278,12 @@ export default function FooterCTA() {
 
             <div className="community-download-row">
               <AppStoreBadgeLink
-                className="footer-app-store-link"
+                className="footer-store-link"
                 imageClassName="footer-app-store-badge"
+              />
+              <GooglePlayBadgeLink
+                className="footer-store-link"
+                imageClassName="footer-google-play-badge"
               />
             </div>
             

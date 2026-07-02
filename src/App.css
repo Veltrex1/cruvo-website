@@ -82,7 +82,7 @@ section {
   display: none !important;
 }
 
-.nav-app-store-link {
+.nav-store-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -96,7 +96,7 @@ section {
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.nav-app-store-link:hover {
+.nav-store-link:hover {
   transform: translateY(-1px);
   border-color: rgba(229, 78, 87, 0.48);
   background: rgba(255, 255, 255, 0.09);
@@ -108,6 +108,12 @@ section {
   height: auto;
 }
 
+.nav-google-play-badge {
+  display: block;
+  width: 126px;
+  height: auto;
+}
+
 @media (max-width: 768px) {
   .mobile-menu-btn {
     display: flex !important;
@@ -115,7 +121,7 @@ section {
 }
 
 @media (max-width: 1024px) {
-  .nav-app-store-link {
+  .nav-store-link {
     display: none !important;
   }
 }
