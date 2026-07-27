@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import Hero from './components/Hero';
 import FeaturesGrid from './components/FeaturesGrid';
@@ -9,9 +9,11 @@ import FooterCTA from './components/FooterCTA';
 import Preloader from './components/Preloader';
 import LegalPage from './components/LegalPage';
 import SupportPage from './components/SupportPage';
+import ShareLandingPage from './components/ShareLandingPage';
 import AppStoreBadgeLink from './components/AppStoreBadgeLink';
 import GooglePlayBadgeLink from './components/GooglePlayBadgeLink';
 import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
+import { getShareRoute } from './share-routes';
 import './App.css';
 
 const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support'];
@@ -22,6 +24,7 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY, scrollYProgress } = useScroll();
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+  const shareRoute = useMemo(() => getShareRoute(currentPath), [currentPath]);
   const legalPolicy = currentPath === '/privacy-policy'
     ? privacyPolicy
     : currentPath === '/terms'
@@ -31,10 +34,10 @@ function App() {
         : null;
 
   useEffect(() => {
-    if (!KNOWN_ROUTES.includes(currentPath)) {
+    if (!KNOWN_ROUTES.includes(currentPath) && !shareRoute) {
       window.location.replace('/');
     }
-  }, [currentPath]);
+  }, [currentPath, shareRoute]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     // Transition navbar styles when scrolled past 20px
@@ -51,6 +54,10 @@ function App() {
 
   if (currentPath === '/support') {
     return <SupportPage />;
+  }
+
+  if (shareRoute) {
+    return <ShareLandingPage route={shareRoute} />;
   }
 
   return (
