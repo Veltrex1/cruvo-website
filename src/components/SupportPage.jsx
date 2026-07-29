@@ -29,7 +29,7 @@ const supportTopics = [
   },
   {
     title: "Account deletion and privacy",
-    description: "Request help with deleting your account, privacy rights, or data-related questions.",
+    description: "Delete your Cruvo account in the app or submit a verified deletion or privacy request by email.",
     icon: UserX,
   },
 ];
@@ -274,6 +274,58 @@ export default function SupportPage() {
           max-width: 780px;
         }
 
+        .account-deletion-panel {
+          border-top: 1px solid rgba(22,22,24,0.1);
+          display: grid;
+          gap: 28px;
+          grid-template-columns: minmax(0, 1fr) minmax(280px, 390px);
+          margin-top: 58px;
+          padding-top: 42px;
+        }
+
+        .account-deletion-panel h2 {
+          margin-bottom: 14px;
+        }
+
+        .account-deletion-copy {
+          color: #667085;
+          line-height: 1.7;
+          margin: 0;
+          max-width: 700px;
+        }
+
+        .account-deletion-steps {
+          color: #4b5563;
+          line-height: 1.7;
+          margin: 22px 0 0;
+          padding-left: 22px;
+        }
+
+        .account-deletion-steps li + li {
+          margin-top: 8px;
+        }
+
+        .account-deletion-action {
+          align-self: start;
+          background: #fff;
+          border: 1px solid rgba(22,22,24,0.08);
+          border-radius: 8px;
+          box-shadow: 0 18px 50px rgba(15,42,43,0.06);
+          padding: 24px;
+        }
+
+        .account-deletion-action strong {
+          display: block;
+          font-size: 1.08rem;
+          margin-bottom: 10px;
+        }
+
+        .account-deletion-action p {
+          color: #667085;
+          line-height: 1.62;
+          margin: 0 0 18px;
+        }
+
         .support-footer {
           width: min(100% - 32px, 1180px);
           margin: 0 auto;
@@ -304,6 +356,10 @@ export default function SupportPage() {
 
           .support-topic-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .account-deletion-panel {
+            grid-template-columns: 1fr;
           }
         }
 
@@ -418,9 +474,48 @@ export default function SupportPage() {
           ))}
         </div>
         <p className="support-note">
-          Account deletion can be started inside the Cruvo app from Profile, Settings, Account Actions,
-          Delete Account. You can also email us for privacy or data questions.
+          For privacy rights or data questions that do not require account deletion, email
+          hello@veltrex.ai with enough information for us to identify and verify your account.
         </p>
+
+        <div className="account-deletion-panel" id="account-deletion">
+          <div>
+            <h2>Delete your Cruvo account</h2>
+            <p className="account-deletion-copy">
+              You do not need to reinstall or open Cruvo to request deletion. This support page is
+              Cruvo&apos;s web-accessible account-deletion request path for users who cannot access
+              the in-app control.
+            </p>
+            <ol className="account-deletion-steps">
+              <li>
+                In the app, go to Profile, Settings, Account Actions, then Delete Account for
+                immediate self-service deletion.
+              </li>
+              <li>
+                Or email us from the address associated with your Cruvo account and include your
+                Cruvo username. We may ask you to verify account ownership.
+              </li>
+              <li>
+                Deleting Cruvo does not cancel an App Store or Google Play subscription. Cancel it
+                separately in the store account used to purchase Cruvo Pro.
+              </li>
+            </ol>
+          </div>
+          <aside className="account-deletion-action" aria-label="Request Cruvo account deletion">
+            <strong>Email an account-deletion request</strong>
+            <p>
+              Use your account email when possible. We will reply with any verification or
+              completion steps.
+            </p>
+            <a
+              className="support-email-button"
+              href="mailto:hello@veltrex.ai?subject=Cruvo%20Account%20Deletion%20Request&body=Cruvo%20username%3A%0AAccount%20email%3A%0A%0AI%20request%20deletion%20of%20my%20Cruvo%20account%20and%20associated%20personal%20data."
+            >
+              <UserX size={20} aria-hidden="true" />
+              Request account deletion
+            </a>
+          </aside>
+        </div>
       </section>
 
       <footer className="support-footer">
