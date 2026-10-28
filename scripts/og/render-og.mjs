@@ -1,4 +1,5 @@
-// Renders the 1200x630 social share cards (og:image / twitter:image) into public/og/.
+// Renders the 1200x630 social share cards (og:image / twitter:image) into public/og/,
+// and the 512x512 logo used by the structured data (public/logo-512.png).
 // Run with: node scripts/og/render-og.mjs   (needs Playwright's Chromium; set PLAYWRIGHT_PATH if installed globally)
 // Uses only existing brand material: the Cruvo logo, site colours, page copy, and the pre-rendered ride map.
 import { createRequire } from 'node:module';
@@ -104,6 +105,13 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
       await tab.screenshot({ path: file, type: 'png' });
       console.log(`og/${card.slug}.png  ${(fs.statSync(file).size / 1024).toFixed(0)} KB`);
     }
+    // Square raster logo for structured data (search engines do not accept SVG logos).
+    const logo = await browser.newPage({ viewport: { width: 512, height: 512 } });
+    await logo.setContent(`<body style="margin:0;width:512px;height:512px;display:grid;place-items:center;background:#fff">
+      <img src="http://localhost:${port}/logos/Logomark%20-%20Coral%20Red.svg" style="width:360px;height:auto"></body>`);
+    await logo.waitForLoadState('networkidle');
+    await logo.screenshot({ path: path.join(PUBLIC, 'logo-512.png'), type: 'png' });
+    console.log(`logo-512.png  ${(fs.statSync(path.join(PUBLIC, 'logo-512.png')).size / 1024).toFixed(0)} KB`);
   } finally {
     await browser.close();
     server.close();

@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { buildSitemap } from './scripts/sitemap.js'
 import { prerenderPages } from './scripts/prerender.js'
+import { homeStructuredData, injectJsonLd, readHead } from './scripts/structured-data.js'
 
 // Emits sitemap.xml at build time, with lastmod taken from each page's source history.
 const sitemap = () => ({
@@ -21,6 +22,8 @@ const prerender = () => ({
     for (const { fileName, html } of prerenderPages(String(index.source))) {
       this.emitFile({ type: 'asset', fileName, source: html })
     }
+    // Home page JSON-LD, built from the home page's own title and description.
+    index.source = injectJsonLd(String(index.source), homeStructuredData(readHead(String(index.source))))
   },
 })
 

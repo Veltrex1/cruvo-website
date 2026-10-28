@@ -1,4 +1,5 @@
 import { SITE_ORIGIN, SITE_PAGES } from '../src/data/sitePages.js';
+import { injectJsonLd, pageStructuredData } from './structured-data.js';
 
 const escape = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
@@ -41,6 +42,7 @@ export function prerenderPages(indexHtml) {
       .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${escape(page.description)}$2`)
       .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${SITE_ORIGIN}/og${page.path}.png$2`)
       .replace(/<div id="root">[\s\S]*?<\/div>\s*(?=<script|<\/body>)/, `${pageBody(page).trim()}\n    `);
-    return { fileName: `${page.path.slice(1)}/index.html`, html };
+    const withData = injectJsonLd(html, pageStructuredData(page.path));
+    return { fileName: `${page.path.slice(1)}/index.html`, html: withData };
   });
 }
