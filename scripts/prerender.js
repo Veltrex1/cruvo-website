@@ -33,6 +33,13 @@ export function prerenderPages(indexHtml) {
       .replace(/(<meta name="description" content=")[^"]*(")/, `$1${escape(page.description)}$2`)
       .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${SITE_ORIGIN}${page.path}$2`)
       .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${escape(title)}$2`)
+      .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${escape(page.description)}$2`)
+      .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${SITE_ORIGIN}${page.path}$2`)
+      .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${SITE_ORIGIN}/og${page.path}.png$2`)
+      .replace(/(<meta property="og:image:alt" content=")[^"]*(")/, `$1${escape(`Cruvo: ${page.title}`)}$2`)
+      .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${escape(title)}$2`)
+      .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${escape(page.description)}$2`)
+      .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${SITE_ORIGIN}/og${page.path}.png$2`)
       .replace(/<div id="root">[\s\S]*?<\/div>\s*(?=<script|<\/body>)/, `${pageBody(page).trim()}\n    `);
     return { fileName: `${page.path.slice(1)}/index.html`, html };
   });
