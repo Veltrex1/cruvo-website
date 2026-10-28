@@ -17,6 +17,7 @@ import { getShareRoute } from './share-routes';
 import './App.css';
 
 const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support'];
+const SITE_ORIGIN = 'https://www.cruvo.co';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +33,14 @@ function App() {
       : currentPath === '/eula'
         ? eula
         : null;
+
+  useEffect(() => {
+    // index.html ships the home canonical; point it at this page's own URL on other routes.
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      canonical.setAttribute('href', currentPath === '/' ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${currentPath}`);
+    }
+  }, [currentPath]);
 
   useEffect(() => {
     if (!KNOWN_ROUTES.includes(currentPath) && !shareRoute) {
