@@ -9,3 +9,6 @@ export const SITE_PAGES = [
   { path: '/terms', seoTitle: 'Cruvo Terms and Conditions: Rules for Using the App', description: 'The terms for using Cruvo: accounts, subscriptions, community content and standards, rider safety, location services, account deletion, and disputes.', definition: "The Cruvo Terms and Conditions are the binding agreement between you and Veltrex Solutions LLC that governs your use of the Cruvo app, cruvo.co, and related services.", title: 'Terms and Conditions', blurb: 'The terms that apply when you use Cruvo.' },
   { path: '/eula', seoTitle: 'Cruvo EULA: End User License Agreement for the App', description: 'The license agreement for the Cruvo app: what you may and may not do with it, in-app purchases, support, warranty, and how the license can end.', definition: "The Cruvo End User License Agreement (EULA) is the binding agreement between you and Veltrex Solutions LLC that governs your use of the Cruvo mobile app.", title: 'Terms of Use (EULA)', blurb: 'The end user license agreement for the Cruvo app.' },
 ];
+
+/** The entry for one page, by path (for example '/support'). */
+export const getSitePage = (path) => SITE_PAGES.find((page) => page.path === path);

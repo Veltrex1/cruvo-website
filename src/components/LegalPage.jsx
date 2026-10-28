@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Breadcrumbs, RelatedPages } from "./PageLinks";
-import { SITE_PAGES } from "../data/sitePages";
+import { getSitePage } from "../data/sitePages";
 
 function renderLegalLine(line, index) {
   if (!line.trim()) {
@@ -28,7 +28,7 @@ function renderLegalLine(line, index) {
 
 export default function LegalPage({ policy, currentPath }) {
   const lines = policy.content.split(/\r?\n/);
-  const definition = SITE_PAGES.find((page) => page.path === currentPath)?.definition;
+  const definition = getSitePage(currentPath)?.definition;
   const documentLines = lines;
 
   return (

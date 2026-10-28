@@ -1,8 +1,6 @@
 import { useState } from "react";
 import InfoPage from "./InfoPage";
-import { SITE_PAGES } from "../data/sitePages";
-
-const definitionFor = (path) => SITE_PAGES.find((page) => page.path === path).definition;
+import { getSitePage } from "../data/sitePages";
 
 const support = [
   {
@@ -234,7 +232,7 @@ export default function ClubsPage() {
       crumb="Cruvo for Clubs"
       eyebrow="Cruvo for Clubs"
       heading="Run a club? Ride and drive together."
-      lead={definitionFor("/clubs")}
+      lead={getSitePage("/clubs").definition}
     >
       <section className="info-section">
         <h2>How we support clubs</h2>

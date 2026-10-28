@@ -1,7 +1,5 @@
 import InfoPage from "./InfoPage";
-import { SITE_PAGES } from "../data/sitePages";
-
-const definitionFor = (path) => SITE_PAGES.find((page) => page.path === path).definition;
+import { getSitePage } from "../data/sitePages";
 
 const features = [
   {
@@ -29,7 +27,7 @@ export default function AboutPage() {
       crumb="About"
       eyebrow="About Cruvo"
       heading="Built for the ride. Now for the drive too."
-      lead={definitionFor("/about")}
+      lead={getSitePage("/about").definition}
     >
       <section className="info-section">
         <h2>From bikes to cars</h2>

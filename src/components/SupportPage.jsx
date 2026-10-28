@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Breadcrumbs, RelatedPages } from "./PageLinks";
-import { SITE_PAGES } from "../data/sitePages";
+import { getSitePage } from "../data/sitePages";
 
-const SUPPORT_DEFINITION = SITE_PAGES.find((page) => page.path === "/support").definition;
+const SUPPORT_DEFINITION = getSitePage("/support").definition;
 import { Mail, MapPin, Navigation, ShieldAlert, CreditCard, UserX, Route, LifeBuoy } from "lucide-react";
 
 const supportTopics = [
