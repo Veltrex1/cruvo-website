@@ -21,7 +21,10 @@ function pageBody(page) {
 // Turns the built index.html into one HTML file per page, with its own title, description, canonical and links.
 export function prerenderPages(indexHtml) {
   return SITE_PAGES.map((page) => {
-    const title = `${page.title} | Cruvo`;
+    const title = page.seoTitle;
+    if (title.length < 30 || title.length > 60) {
+      throw new Error(`Title for ${page.path} is ${title.length} characters; keep it between 30 and 60.`);
+    }
     const html = indexHtml
       .replace(/<title>[^<]*<\/title>/, `<title>${escape(title)}</title>`)
       .replace(/(<meta name="description" content=")[^"]*(")/, `$1${escape(page.blurb)}$2`)
