@@ -407,6 +407,8 @@ export default function SupportPage() {
         <a href="/" className="support-logo" aria-label="Cruvo home" />
         <div className="support-nav-links">
           <a className="support-nav-link" href="/">Home</a>
+          <a className="support-nav-link" href="/about">About</a>
+          <a className="support-nav-link" href="/clubs">Clubs</a>
           <a className="support-nav-link" href="/terms">Terms</a>
           <a className="support-nav-link" href="/privacy-policy">Privacy</a>
           <a className="support-nav-link" href="/eula">EULA</a>

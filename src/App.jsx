@@ -10,13 +10,15 @@ import Preloader from './components/Preloader';
 import LegalPage from './components/LegalPage';
 import SupportPage from './components/SupportPage';
 import ShareLandingPage from './components/ShareLandingPage';
+import AboutPage from './components/AboutPage';
+import ClubsPage from './components/ClubsPage';
 import AppStoreBadgeLink from './components/AppStoreBadgeLink';
 import GooglePlayBadgeLink from './components/GooglePlayBadgeLink';
 import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import { getShareRoute } from './share-routes';
 import './App.css';
 
-const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support'];
+const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support', '/about', '/clubs'];
 const SITE_ORIGIN = 'https://www.cruvo.co';
 
 function App() {
@@ -63,6 +65,14 @@ function App() {
 
   if (currentPath === '/support') {
     return <SupportPage />;
+  }
+
+  if (currentPath === '/about') {
+    return <AboutPage />;
+  }
+
+  if (currentPath === '/clubs') {
+    return <ClubsPage />;
   }
 
   if (shareRoute) {
@@ -137,11 +147,14 @@ function App() {
               {[
                 { label: "Features", href: "#features" },
                 { label: "How it works", href: "#how" },
-                { label: "Pricing", href: "#pricing" }
+                { label: "Pricing", href: "#pricing" },
+                { label: "About", href: "/about", page: true },
+                { label: "Clubs", href: "/clubs", page: true }
               ].map(i => (
                 <li key={i.label}>
                   <a href={i.href}
                     onClick={(e) => {
+                      if (i.page) return;
                       e.preventDefault();
                       document.querySelector(i.href)?.scrollIntoView({ behavior: 'smooth' });
                     }}
@@ -203,10 +216,13 @@ function App() {
               {[
                 { label: "Features", href: "#features" },
                 { label: "How it works", href: "#how" },
-                { label: "Pricing", href: "#pricing" }
+                { label: "Pricing", href: "#pricing" },
+                { label: "About", href: "/about", page: true },
+                { label: "Clubs", href: "/clubs", page: true }
               ].map(i => (
                 <a key={i.label} href={i.href}
                   onClick={(e) => {
+                    if (i.page) return;
                     e.preventDefault();
                     setIsMobileMenuOpen(false);
                     document.querySelector(i.href)?.scrollIntoView({ behavior: 'smooth' });

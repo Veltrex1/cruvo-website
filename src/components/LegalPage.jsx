@@ -311,6 +311,8 @@ export default function LegalPage({ policy, currentPath }) {
           <a className="legal-nav-link" href="/">
             Home
           </a>
+          <a className="legal-nav-link" href="/about">About</a>
+          <a className="legal-nav-link" href="/clubs">Clubs</a>
           <a className="legal-nav-link" href="/support">Support</a>
           <a className="legal-nav-link" href="/eula">EULA</a>
           <a className="legal-nav-link" href="/terms">Terms</a>

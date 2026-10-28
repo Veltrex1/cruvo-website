@@ -19,6 +19,8 @@ const LEGAL_SOURCES = ['src/components/LegalPage.jsx'];
 
 export const PAGES = [
   { path: '/', sources: HOME_SOURCES },
+  { path: '/about', sources: ['src/components/AboutPage.jsx', 'src/components/InfoPage.jsx'] },
+  { path: '/clubs', sources: ['src/components/ClubsPage.jsx', 'src/components/InfoPage.jsx', 'api/club-inquiry.js'] },
   { path: '/support', sources: ['src/components/SupportPage.jsx'] },
   { path: '/privacy-policy', sources: [...LEGAL_SOURCES, 'src/data/legalPolicies.js'] },
   { path: '/terms', sources: [...LEGAL_SOURCES, 'src/data/legalPolicies.js'] },
