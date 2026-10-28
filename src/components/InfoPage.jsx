@@ -155,6 +155,13 @@ const styles = `
     text-wrap: pretty;
   }
 
+  .info-address {
+    margin: 0;
+    font-style: normal;
+    color: #667085;
+    line-height: 1.62;
+  }
+
   .info-link {
     color: var(--coral-red);
     font-weight: 800;
@@ -248,7 +255,7 @@ export default function InfoPage({ currentPath, crumb, eyebrow, heading, lead, c
       <footer className="info-footer">
         <span>&copy; {new Date().getFullYear()} Cruvo. All rights reserved.</span>
         <span>
-          <a href="/terms">Terms</a> &nbsp;/&nbsp; <a href="/privacy-policy">Privacy Policy</a> &nbsp;/&nbsp; <a href="/eula">EULA</a>
+          <a href="/about">About Cruvo</a> &nbsp;·&nbsp; <a href="/contact">Contact</a> &nbsp;·&nbsp; <a href="mailto:hello@veltrex.ai">Email</a> &nbsp;/&nbsp; <a href="/terms">Terms</a> &nbsp;/&nbsp; <a href="/privacy-policy">Privacy Policy</a> &nbsp;/&nbsp; <a href="/eula">EULA</a>
         </span>
       </footer>
     </main>

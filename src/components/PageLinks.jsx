@@ -84,7 +84,7 @@ export function Breadcrumbs({ current }) {
 }
 
 export function RelatedPages({ currentPath }) {
-  const related = SITE_PAGES.filter((page) => page.path !== currentPath);
+  const related = SITE_PAGES.filter((page) => page.path !== currentPath && page.related !== false);
   return (
     <aside className="page-links related-pages" aria-label="Related">
       <style>{styles}</style>

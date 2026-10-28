@@ -5,7 +5,7 @@ const escape = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
 
 // Plain, visible copy of the page's content and links; React replaces it on mount.
 function pageBody(page) {
-  const related = SITE_PAGES.filter((p) => p.path !== page.path)
+  const related = SITE_PAGES.filter((p) => p.path !== page.path && p.related !== false)
     .map((p) => `<li><a href="${p.path}">${escape(p.title)}</a> ${escape(p.blurb)}</li>`)
     .join('');
   return `
@@ -15,6 +15,7 @@ function pageBody(page) {
         <h1>${escape(page.title)}</h1>
         <p>${escape(page.definition)}</p>
         <aside aria-label="Related"><h2>Related</h2><ul>${related}</ul></aside>
+        <footer><a href="/about">About Cruvo</a> · <a href="/contact">Contact</a> · <a href="mailto:hello@veltrex.ai">Email</a></footer>
       </main>
     </div>`;
 }

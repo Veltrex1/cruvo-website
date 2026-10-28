@@ -26,6 +26,7 @@ const HEADINGS = {
   '/eula': 'Terms of Use (EULA)',
   '/about': 'Built for the ride. Now for the drive too.',
   '/clubs': 'Run a club? Ride and drive together.',
+  '/contact': 'Contact Cruvo',
 };
 export const CARDS = [
   {

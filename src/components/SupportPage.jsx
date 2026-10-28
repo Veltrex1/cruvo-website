@@ -540,7 +540,7 @@ export default function SupportPage() {
       <footer className="support-footer">
         <span>&copy; {new Date().getFullYear()} Cruvo. All rights reserved.</span>
         <span>
-          <a href="/terms">Terms</a> &nbsp;/&nbsp; <a href="/privacy-policy">Privacy Policy</a> &nbsp;/&nbsp; <a href="/eula">EULA</a>
+          <a href="/about">About Cruvo</a> &nbsp;·&nbsp; <a href="/contact">Contact</a> &nbsp;·&nbsp; <a href="mailto:hello@veltrex.ai">Email</a> &nbsp;/&nbsp; <a href="/terms">Terms</a> &nbsp;/&nbsp; <a href="/privacy-policy">Privacy Policy</a> &nbsp;/&nbsp; <a href="/eula">EULA</a>
         </span>
       </footer>
     </main>

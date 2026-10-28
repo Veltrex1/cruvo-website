@@ -12,13 +12,14 @@ import SupportPage from './components/SupportPage';
 import ShareLandingPage from './components/ShareLandingPage';
 import AboutPage from './components/AboutPage';
 import ClubsPage from './components/ClubsPage';
+import ContactPage from './components/ContactPage';
 import AppStoreBadgeLink from './components/AppStoreBadgeLink';
 import GooglePlayBadgeLink from './components/GooglePlayBadgeLink';
 import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import { getShareRoute } from './share-routes';
 import './App.css';
 
-const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support', '/about', '/clubs'];
+const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support', '/about', '/clubs', '/contact'];
 const SITE_ORIGIN = 'https://www.cruvo.co';
 
 function App() {
@@ -73,6 +74,10 @@ function App() {
 
   if (currentPath === '/clubs') {
     return <ClubsPage />;
+  }
+
+  if (currentPath === '/contact') {
+    return <ContactPage />;
   }
 
   if (shareRoute) {

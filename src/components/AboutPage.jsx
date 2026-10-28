@@ -1,5 +1,6 @@
 import InfoPage from "./InfoPage";
 import { getSitePage } from "../data/sitePages";
+import { COMPANY } from "../data/company";
 
 const features = [
   {
@@ -59,6 +60,19 @@ export default function AboutPage() {
         <p>
           We want to make it easier to organise and join charity rides and drives, for motorcycles and cars
           alike, so the roads we love can also do some good.
+        </p>
+      </section>
+
+      <section className="info-section">
+        <h2>Who builds Cruvo</h2>
+        <p>
+          Cruvo is built and run by {COMPANY.name}, a company based in {COMPANY.city}, {COMPANY.regionName}. The same company
+          is named in our <a className="info-link" href="/privacy-policy">Privacy Policy</a>,{" "}
+          <a className="info-link" href="/terms">Terms</a>, and <a className="info-link" href="/eula">EULA</a>.
+        </p>
+        <p>
+          To reach the team, email <a className="info-link" href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a> or see the{" "}
+          <a className="info-link" href="/contact">contact page</a> for phone and mailing address.
         </p>
       </section>
 

@@ -4,6 +4,7 @@
 import { SITE_ORIGIN, SITE_PAGES } from '../src/data/sitePages.js';
 import { privacyPolicy, termsAndConditions, eula } from '../src/data/legalPolicies.js';
 import { PAGES as SITEMAP_PAGES, pageLastmod } from './sitemap.js';
+import { COMPANY } from '../src/data/company.js';
 
 const APP_STORE = 'https://apps.apple.com/us/app/cruvo/id6774693070';
 const GOOGLE_PLAY = 'https://play.google.com/store/apps/details?id=com.veltrex1.cruvo';
@@ -21,7 +22,21 @@ const organization = {
   logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/logo-512.png`, width: 512, height: 512 },
   sameAs: PROFILES,
   // "Operated by Veltrex Solutions LLC" (from the legal documents).
-  parentOrganization: { '@type': 'Organization', name: 'Veltrex Solutions LLC' },
+  parentOrganization: {
+    '@type': 'Organization',
+    name: COMPANY.name,
+    email: COMPANY.email,
+    telephone: COMPANY.phone,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: COMPANY.street,
+      addressLocality: COMPANY.city,
+      addressRegion: COMPANY.region,
+      postalCode: COMPANY.postalCode,
+      addressCountry: COMPANY.countryCode,
+    },
+  },
+  contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', email: COMPANY.email, telephone: COMPANY.phone, url: `${SITE_ORIGIN}/contact` },
 };
 
 const website = { '@type': 'WebSite', '@id': SITE_ID, name: 'Cruvo', url: `${SITE_ORIGIN}/`, publisher: { '@id': ORG_ID }, inLanguage: 'en' };
@@ -33,7 +48,7 @@ function legalDates(policy) {
   return m ? { datePublished: iso(m[1]), dateModified: iso(m[2]) } : {};
 }
 const LEGAL = { '/privacy-policy': privacyPolicy, '/terms': termsAndConditions, '/eula': eula };
-const PAGE_TYPES = { '/about': 'AboutPage', '/support': 'ContactPage' };
+const PAGE_TYPES = { '/about': 'AboutPage', '/support': 'ContactPage', '/contact': 'ContactPage' };
 
 function lastModified(path) {
   const entry = SITEMAP_PAGES.find((p) => p.path === path);

@@ -245,6 +245,16 @@ export default function LegalPage({ policy, currentPath }) {
           padding-top: 24px;
         }
 
+        .legal-footer a {
+          color: #667085;
+          font-weight: 700;
+          text-decoration: none;
+        }
+
+        .legal-footer a:hover {
+          color: var(--coral-red);
+        }
+
         @media (max-width: 860px) {
           .legal-nav {
             align-items: flex-start;
@@ -369,7 +379,9 @@ export default function LegalPage({ policy, currentPath }) {
 
       <footer className="legal-footer">
         <span>&copy; {new Date().getFullYear()} Cruvo. All rights reserved.</span>
-        <span>Veltrex Solutions LLC</span>
+        <span>
+          <a href="/about">About Cruvo</a> &nbsp;·&nbsp; <a href="/contact">Contact</a> &nbsp;·&nbsp; <a href="mailto:hello@veltrex.ai">Email</a> &nbsp;/&nbsp; Veltrex Solutions LLC
+        </span>
       </footer>
     </main>
   );
