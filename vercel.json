@@ -68,7 +68,19 @@
       "destination": "/index.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/rides/:id",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/posts/:id",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/u/:id",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/users/:id",
       "destination": "/index.html"
     }
   ]
