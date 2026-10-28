@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Breadcrumbs, RelatedPages } from "./PageLinks";
+import { SITE_PAGES } from "../data/sitePages";
 
 function renderLegalLine(line, index) {
   if (!line.trim()) {
@@ -27,6 +28,7 @@ function renderLegalLine(line, index) {
 
 export default function LegalPage({ policy, currentPath }) {
   const lines = policy.content.split(/\r?\n/);
+  const definition = SITE_PAGES.find((page) => page.path === currentPath)?.definition;
   const documentLines = lines;
 
   return (
@@ -128,6 +130,14 @@ export default function LegalPage({ policy, currentPath }) {
           line-height: 0.94;
           letter-spacing: -0.03em;
           max-width: 760px;
+        }
+
+        .legal-lead {
+          margin: 22px 0 0;
+          max-width: 62ch;
+          color: #4b5563;
+          font-size: clamp(1.05rem, 2vw, 1.2rem);
+          line-height: 1.65;
         }
 
         .legal-meta {
@@ -331,6 +341,7 @@ export default function LegalPage({ policy, currentPath }) {
         <div>
           <div className="legal-eyebrow">Cruvo legal</div>
           <h1>{policy.title}</h1>
+          {definition && <p className="legal-lead">{definition}</p>}
         </div>
         <div className="legal-meta">
           <strong>Effective Date</strong>

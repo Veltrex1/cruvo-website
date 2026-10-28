@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
 import { Breadcrumbs, RelatedPages } from "./PageLinks";
+import { SITE_PAGES } from "../data/sitePages";
+
+const SUPPORT_DEFINITION = SITE_PAGES.find((page) => page.path === "/support").definition;
 import { Mail, MapPin, Navigation, ShieldAlert, CreditCard, UserX, Route, LifeBuoy } from "lucide-react";
 
 const supportTopics = [
@@ -435,6 +438,7 @@ export default function SupportPage() {
           <div className="support-eyebrow">Cruvo support</div>
           <h1>Talk to us.</h1>
           <p className="support-hero-copy">
+            {SUPPORT_DEFINITION}{' '}
             Need help with Cruvo? Send us an email and include your account email, device model,
             app version, and a short description of what happened so we can investigate quickly.
           </p>

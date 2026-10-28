@@ -203,7 +203,7 @@ export default function Hero() {
               marginRight: '4px',
               marginTop: '-4px', // subtle optical alignment adjustment
               filter: 'drop-shadow(0 0 15px rgba(255, 74, 74, 0.8))'
-            }} title="Cruvo" />
+            }} title="Cruvo"><span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>Cruvo{' '}</span></span>
             is your all-in-one motorcycle app for group rides, live navigation, crew updates, and the community that rides with you.
           </motion.p>
 

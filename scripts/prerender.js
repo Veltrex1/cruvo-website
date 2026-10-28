@@ -12,7 +12,7 @@ function pageBody(page) {
       <main style="min-height:100vh;box-sizing:border-box;padding:24px 16px;background:#f8f8f8;color:#161618;font-family:system-ui,sans-serif;line-height:1.6">
         <nav aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">${escape(page.title)}</li></ol></nav>
         <h1>${escape(page.title)}</h1>
-        <p>${escape(page.blurb)}</p>
+        <p>${escape(page.definition)}</p>
         <aside aria-label="Related"><h2>Related</h2><ul>${related}</ul></aside>
       </main>
     </div>`;
