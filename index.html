@@ -14,16 +14,16 @@
     <meta property="og:type" content="website" />
   </head>
   <body>
-    <div id="root"></div>
-    <noscript>
-      <nav aria-label="Site pages">
+    <!-- Crawlable links for clients that do not run JavaScript; React replaces this on mount. -->
+    <div id="root">
+      <nav aria-label="Site pages" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">
         <a href="/">Home</a>
         <a href="/support">Support</a>
         <a href="/privacy-policy">Privacy Policy</a>
         <a href="/terms">Terms and Conditions</a>
         <a href="/eula">Terms of Use (EULA)</a>
       </nav>
-    </noscript>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
