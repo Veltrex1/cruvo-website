@@ -88,9 +88,11 @@ export function useRideDemo(sectionRef) {
     listeners.current.forEach((fn) => fn(0));
   }, [state.resetKey, regroupId]);
 
-  // Only animate while the section is on screen and the tab is visible.
+  // Only animate while the map itself is on screen and the tab is visible. Watching the map, not the
+  // whole (tall, on mobile) section, means a short screen showing the full map still plays the demo.
   useEffect(() => {
-    const el = sectionRef.current;
+    const section = sectionRef.current;
+    const el = section?.querySelector('.lr-map') ?? section;
     if (!el || typeof IntersectionObserver === 'undefined') {
       setInView(true);
       return undefined;
