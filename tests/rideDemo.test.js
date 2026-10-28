@@ -1,92 +1,120 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  RIDERS, REGROUP_SPOTS, ROUTE_LENGTH, pointAt, pathUpTo, statusFor, statusSpoken, gapMinutes, riderProgress,
-  maxProgress, nextInstruction, rideReducer, initialRideState, getRegroup,
+  RIDERS, REGROUP_SPOTS, ROUTE_COORDS, ROUTE_MILES, ROUTE_MINUTES, DEFAULT_REGROUP_ID, pointAt, coordsUpTo, riderProgress, hasArrived,
+  runLength, statusFor, statusSpoken, nextInstruction, rideReducer, initialRideState, getRegroup,
 } from '../src/components/live-ride/rideDemo.js';
+import { project, distance } from '../src/components/live-ride/geo.js';
+import FRAMES from '../src/components/live-ride/rideFrames.json' with { type: 'json' };
 
-test('the demo has exactly three riders in a consistent order', () => {
+const R = DEFAULT_REGROUP_ID;
+
+test('the real route is the saved Brown County ride', () => {
+  assert.ok(ROUTE_COORDS.length > 100);
+  assert.ok(ROUTE_MILES > 7 && ROUTE_MILES < 10, `${ROUTE_MILES} mi`);
+  assert.ok(ROUTE_MINUTES > 12 && ROUTE_MINUTES < 20);
+});
+
+test('three riders in a consistent order with 2 and 3 minute gaps', () => {
   assert.deepEqual(RIDERS.map((r) => r.name), ['Alex', 'You', 'Maya']);
-  assert.ok(RIDERS[0].start > RIDERS[1].start && RIDERS[1].start > RIDERS[2].start);
+  assert.equal(statusFor('alex', 0, R), 'Up ahead · 2 min');
+  assert.equal(statusFor('you', 0, R), 'On route');
+  assert.equal(statusFor('maya', 0, R), 'Behind you · 3 min');
+  assert.equal(statusSpoken('maya', 0, R), 'Maya, behind you, 3 minutes');
 });
 
-test('statuses come from the same positions the map uses', () => {
-  assert.equal(gapMinutes('alex', 'you'), 2);
-  assert.equal(gapMinutes('you', 'maya'), 3);
-  assert.equal(statusFor('alex'), 'Up ahead · 2 min');
-  assert.equal(statusFor('you'), 'On route');
-  assert.equal(statusFor('maya'), 'Behind you · 3 min');
-  assert.equal(statusSpoken('maya'), 'Maya, behind you 3 minutes');
+test('every regroup spot is on the route and ahead of the leader at the start', () => {
+  for (const spot of REGROUP_SPOTS) {
+    assert.ok(spot.f > RIDERS[0].start, spot.name);
+    const p = pointAt(spot.f);
+    assert.ok(distance(p, spot.at) < 150, `${spot.name} is on the route`);
+  }
 });
 
-test('route positions are continuous and ordered', () => {
-  const a = pointAt(0);
-  const b = pointAt(1);
-  assert.ok(ROUTE_LENGTH > 500);
-  assert.notDeepEqual(a, b);
+test('riders stop at the regroup spot and the run ends when the last one arrives', () => {
+  const end = runLength(R);
+  assert.equal(hasArrived('alex', end, R), true);
+  assert.equal(hasArrived('maya', end - 0.01, R), false);
+  assert.equal(hasArrived('maya', end, R), true);
+  assert.equal(riderProgress('alex', end + 1, R), getRegroup(R).f, 'nobody rides past the regroup spot');
+  assert.equal(statusFor('alex', end, R), 'At the regroup point');
+  // Alex waits, so the gap to him shrinks as You catch up.
+  const waiting = getRegroup(R).f - RIDERS[0].start + 0.05;
+  assert.match(statusFor('alex', waiting, R), /At the regroup point/);
+  assert.match(statusFor('you', waiting, R), /On route/);
+});
+
+test('route positions are continuous, and the travelled path ends at the leader', () => {
   let prev = pointAt(0);
-  let travelled = 0;
-  for (let i = 1; i <= 200; i++) {
-    const p = pointAt(i / 200);
-    travelled += Math.hypot(p.x - prev.x, p.y - prev.y);
-    assert.ok(Math.hypot(p.x - prev.x, p.y - prev.y) < ROUTE_LENGTH / 100, 'no jumps along the route');
+  for (let i = 1; i <= 300; i++) {
+    const p = pointAt(i / 300);
+    assert.ok(distance(prev, p) < 200, 'no jumps');
     prev = p;
   }
-  assert.ok(Math.abs(travelled - ROUTE_LENGTH) < ROUTE_LENGTH * 0.01);
-  assert.ok(pathUpTo(0.5).startsWith('M '));
+  const f = riderProgress('alex', 0.1, R);
+  assert.deepEqual(coordsUpTo(f).at(-1), pointAt(f));
 });
 
-test('every regroup spot is ahead of the leader and reachable', () => {
-  for (const spot of REGROUP_SPOTS) {
-    assert.ok(maxProgress(spot.id) > 0, spot.name);
-    assert.ok(riderProgress('alex', maxProgress(spot.id)) <= spot.f + 1e-9);
+test('turn instructions come from the real route and move on as the viewer passes them', () => {
+  const start = nextInstruction(riderProgress('you', 0, R), R);
+  assert.equal(start.text, 'Turn left onto SR 46');
+  assert.match(start.distance, /^In \d+\.\d mi$/);
+  const later = nextInstruction(0.7, R);
+  assert.equal(later.text, 'Turn right into Brown County State Park');
+  const near = nextInstruction(0.995, R);
+  assert.match(near.text, /^Arrive at North Lookout/);
+  assert.match(near.distance, /ft$/);
+  assert.equal(nextInstruction(1, R).text, "You're at North Lookout");
+  const nashville = nextInstruction(0.5, 'nashville');
+  assert.equal(nashville.text, 'Arrive at Downtown Nashville', 'turns past the regroup spot are not shown');
+});
+
+test('frames project the route inside the image and clear of the desktop crew card', () => {
+  for (const [name, frame] of Object.entries(FRAMES)) {
+    for (const c of ROUTE_COORDS) {
+      const { x, y } = project(c, frame);
+      assert.ok(x > 0 && x < frame.width && y > 0 && y < frame.height, `${name}: route inside the image`);
+    }
   }
+  const d = FRAMES.desktop;
+  const maxX = Math.max(...ROUTE_COORDS.map((c) => project(c, d).x));
+  assert.ok(maxX < d.width - 360, 'desktop route stays left of the crew card');
 });
 
-test('default scene shows a believable next turn', () => {
-  const ins = nextInstruction(RIDERS[1].start, 'cafe');
-  assert.equal(ins.text, 'Right onto Ridge Road');
-  assert.equal(ins.distance, 'In 0.8 mi');
-});
-
-test('instruction moves on as the viewer passes a turn and ends at the regroup spot', () => {
-  assert.equal(nextInstruction(0.62, 'cafe').text, 'Left onto Mill Road');
-  const near = nextInstruction(0.87, 'cafe');
-  assert.equal(near.text, 'Arrive at Millstone Café');
-});
-
-test('selection changes only the selected rider', () => {
-  const s = rideReducer(initialRideState, { type: 'select', id: 'alex' });
-  assert.equal(s.selected, 'alex');
-  assert.equal(rideReducer(s, { type: 'select', id: 'nobody' }), s);
-  assert.equal(rideReducer(s, { type: 'select', id: 'you' }).selected, 'you');
-});
-
-test('choosing a regroup spot updates it, resets playback and announces it', () => {
-  let s = rideReducer(initialRideState, { type: 'play' });
-  s = rideReducer(s, { type: 'openChooser' });
-  assert.equal(s.playback, 'paused', 'opening the chooser pauses the demo');
-  s = rideReducer(s, { type: 'chooseRegroup', id: 'lakeside' });
-  assert.equal(s.regroupId, 'lakeside');
-  assert.equal(s.chooserOpen, false);
-  assert.equal(s.resetKey, initialRideState.resetKey + 1);
-  assert.equal(s.announcement, 'Demo regroup updated for all 3 riders.');
-  assert.equal(getRegroup(s.regroupId).name, 'Lakeside Picnic Area');
-  const same = rideReducer(s, { type: 'chooseRegroup', id: 'lakeside' });
-  assert.equal(same.resetKey, s.resetKey, 'picking the same spot does not reset');
-});
-
-test('playback: play, pause, finish, replay; no automatic resume', () => {
-  let s = rideReducer(initialRideState, { type: 'play' });
-  assert.equal(s.playback, 'playing');
-  s = rideReducer(s, { type: 'pause' });
+test('autoplay by default; a manual pause sticks; replay starts over', () => {
+  assert.equal(initialRideState.playback, 'playing');
+  let s = rideReducer(initialRideState, { type: 'pause' });
   assert.equal(s.playback, 'paused');
-  s = rideReducer(s, { type: 'finish' });
-  assert.equal(s.playback, 'paused', 'finish only applies while playing');
+  assert.equal(s.userPaused, true);
   s = rideReducer(s, { type: 'play' });
+  assert.equal(s.playback, 'playing');
+  assert.equal(s.userPaused, false);
   s = rideReducer(s, { type: 'finish' });
   assert.equal(s.playback, 'finished');
   const replay = rideReducer(s, { type: 'play' });
-  assert.equal(replay.playback, 'playing');
-  assert.equal(replay.resetKey, s.resetKey + 1, 'replay starts from the beginning');
+  assert.equal(replay.resetKey, s.resetKey + 1);
+});
+
+test('reduced motion: the demo does not start on its own', () => {
+  assert.equal(rideReducer(initialRideState, { type: 'stopForMotion' }).playback, 'paused');
+});
+
+test('chooser pauses, resumes on close, and a new spot restarts the run', () => {
+  let s = rideReducer(initialRideState, { type: 'openChooser' });
+  assert.equal(s.playback, 'paused');
+  assert.equal(rideReducer(s, { type: 'closeChooser' }).playback, 'playing', 'closing resumes');
+  s = rideReducer(s, { type: 'chooseRegroup', id: 'nashville' });
+  assert.equal(s.regroupId, 'nashville');
+  assert.equal(s.playback, 'playing');
+  assert.equal(s.resetKey, 1);
+  assert.equal(s.announcement, 'Demo regroup updated for all 3 riders.');
+  const paused = rideReducer(rideReducer(initialRideState, { type: 'pause' }), { type: 'openChooser' });
+  assert.equal(rideReducer(paused, { type: 'closeChooser' }).playback, 'paused', 'a manual pause is kept');
+  assert.equal(rideReducer(paused, { type: 'chooseRegroup', id: 'nashville' }).playback, 'paused');
+});
+
+test('selection only changes the selected rider', () => {
+  const s = rideReducer(initialRideState, { type: 'select', id: 'alex' });
+  assert.equal(s.selected, 'alex');
+  assert.equal(rideReducer(s, { type: 'select', id: 'nobody' }), s);
 });

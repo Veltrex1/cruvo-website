@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { initialRideState, maxProgress, nextInstruction, rideReducer, riderProgress } from './rideDemo';
+import { RIDERS, initialRideState, nextInstruction, rideReducer, riderProgress, runLength, statusFor } from './rideDemo';
 
-const SPEED = 0.03; // route fraction per second
+const SPEED = 0.045; // route fraction per second (about 20 s per run)
+const HOLD_MS = 2600; // pause with everyone at the regroup spot
+const FADE_MS = 450;
 const REDUCED_STEPS = 6;
-const REDUCED_STEP_MS = 1100;
+const REDUCED_STEP_MS = 1200;
 
-const queries = {
-  desktop: '(min-width: 1100px)',
-  tablet: '(min-width: 768px)',
-};
+const queries = { desktop: '(min-width: 1100px)', tablet: '(min-width: 768px)' };
 
 function currentLayout() {
   if (typeof window === 'undefined' || !window.matchMedia) return 'desktop';
@@ -43,30 +42,33 @@ export function usePrefersReducedMotion() {
 }
 
 /**
- * Owns the demo state. Playback position lives in a ref and is pushed to subscribers
- * (the map writes marker positions straight to the DOM), so React does not re-render per frame.
- * Only the navigation hint, which changes a few times per second at most, is React state.
+ * Owns the demo. The run position `s` lives in a ref and is pushed to subscribers (the map writes
+ * marker positions straight to the DOM), so React does not re-render every frame. The navigation
+ * hint and the crew statuses change only a few times per run and are React state.
  */
-export function useRideDemo() {
+export function useRideDemo(sectionRef) {
   const [state, dispatch] = useReducer(rideReducer, initialRideState);
   const reducedMotion = usePrefersReducedMotion();
-  const progressRef = useRef(0);
+  const [inView, setInView] = useState(false);
+  const [pageVisible, setPageVisible] = useState(() => typeof document === 'undefined' || !document.hidden);
+  const [fading, setFading] = useState(false);
+  const sRef = useRef(0);
   const listeners = useRef(new Set());
-  const lastNavKey = useRef('');
-  const [nav, setNav] = useState(() => nextInstruction(riderProgress('you', 0), initialRideState.regroupId));
+  const [snapshot, setSnapshot] = useState({ s: 0, key: '', run: '0:' + initialRideState.regroupId });
+
+  const regroupId = state.regroupId;
+  const run = `${state.resetKey}:${regroupId}`;
 
   const emit = useCallback(
     (s) => {
-      progressRef.current = s;
+      sRef.current = s;
       listeners.current.forEach((fn) => fn(s));
-      const next = nextInstruction(riderProgress('you', s), state.regroupId);
-      const key = `${next.text}|${next.distance}`;
-      if (key !== lastNavKey.current) {
-        lastNavKey.current = key;
-        setNav(next);
-      }
+      // Re-render only when something the visitor reads would change (turn hint or a status line).
+      const nav = nextInstruction(riderProgress('you', s, regroupId), regroupId);
+      const key = [nav.text, nav.distance, ...RIDERS.map((r) => statusFor(r.id, s, regroupId))].join('|');
+      setSnapshot((prev) => (prev.key === key && prev.run === run ? prev : { s, key, run }));
     },
-    [state.regroupId],
+    [regroupId, run],
   );
 
   const subscribe = useCallback((fn) => {
@@ -74,25 +76,53 @@ export function useRideDemo() {
     return () => listeners.current.delete(fn);
   }, []);
 
-  // Back to the starting scene whenever the regroup spot changes or a replay starts.
+  // Reduced motion: never start on its own.
   useEffect(() => {
-    emit(0);
-  }, [state.resetKey, emit]);
+    if (reducedMotion) dispatch({ type: 'stopForMotion' });
+  }, [reducedMotion]);
 
-  // Playback.
+  // Back to the start whenever the regroup spot changes or a replay starts. The displayed snapshot
+  // is tagged with the run it belongs to, so a stale one reads as position 0 without a state update here.
   useEffect(() => {
-    if (state.playback !== 'playing') return undefined;
-    const limit = maxProgress(state.regroupId);
+    sRef.current = 0;
+    listeners.current.forEach((fn) => fn(0));
+  }, [state.resetKey, regroupId]);
+
+  // Only animate while the section is on screen and the tab is visible.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.35 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [sectionRef]);
+
+  useEffect(() => {
+    const onVisibility = () => setPageVisible(!document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  const running = state.playback === 'playing' && inView && pageVisible;
+
+  // Playback loop.
+  useEffect(() => {
+    if (!running) return undefined;
+    const end = runLength(regroupId);
+    const timers = [];
 
     if (reducedMotion) {
-      // No tweening: jump between a few discrete scenes.
-      const per = limit / REDUCED_STEPS;
-      let step = Math.round(progressRef.current / per);
+      // Discrete scenes instead of motion; stops at the end and offers Replay.
+      const per = end / REDUCED_STEPS;
+      let step = Math.round(sRef.current / per);
       const id = setInterval(() => {
         step += 1;
-        const s = Math.min(limit, step * per);
+        const s = Math.min(end, step * per);
         emit(s);
-        if (s >= limit) {
+        if (s >= end) {
           clearInterval(id);
           dispatch({ type: 'finish' });
         }
@@ -105,26 +135,30 @@ export function useRideDemo() {
     const tick = (now) => {
       const dt = Math.min(0.1, (now - last) / 1000);
       last = now;
-      const s = Math.min(limit, progressRef.current + SPEED * dt);
+      const s = Math.min(end, sRef.current + SPEED * dt);
       emit(s);
-      if (s >= limit) {
-        dispatch({ type: 'finish' });
+      if (s >= end) {
+        // Everyone is at the regroup spot: hold, fade, start again.
+        timers.push(setTimeout(() => {
+          setFading(true);
+          timers.push(setTimeout(() => {
+            emit(0);
+            setFading(false);
+            last = performance.now();
+            frame = requestAnimationFrame(tick);
+          }, FADE_MS));
+        }, HOLD_MS));
         return;
       }
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [state.playback, state.regroupId, reducedMotion, emit]);
-
-  // Pause (never resume) when the tab is hidden.
-  useEffect(() => {
-    const onVisibility = () => {
-      if (document.hidden) dispatch({ type: 'pause' });
+    return () => {
+      cancelAnimationFrame(frame);
+      timers.forEach(clearTimeout);
+      setFading(false);
     };
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, []);
+  }, [running, reducedMotion, regroupId, emit]);
 
   // Let the polite announcement be read, then clear it so it can be announced again.
   useEffect(() => {
@@ -133,5 +167,7 @@ export function useRideDemo() {
     return () => clearTimeout(id);
   }, [state.announcement]);
 
-  return { state, dispatch, nav, progressRef, subscribe, reducedMotion };
+  const shown = snapshot.run === run ? snapshot.s : 0;
+  const nav = nextInstruction(riderProgress('you', shown, regroupId), regroupId);
+  return { state, dispatch, s: shown, nav, sRef, subscribe, reducedMotion, fading };
 }

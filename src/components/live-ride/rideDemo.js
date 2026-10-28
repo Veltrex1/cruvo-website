@@ -1,153 +1,114 @@
-// Single source of truth for the "Live on the move" demo: riders, route, regroup spots,
-// navigation hints and the state machine. Pure functions only, so it runs under node:test.
+// Single source of truth for the "Live on the move" demo: a real route (OpenStreetMap data, saved
+// by scripts/ride-map/fetch-route.mjs), three riders, regroup spots, turn steps and the run timeline.
+// Pure functions only, so it runs under node:test.
+import ROUTE_DATA from './rideRoute.json' with { type: 'json' };
+import { distance } from './geo.js';
 
-export const ROUTE_MINUTES = 25; // illustrative: how long the whole route takes
-export const ROUTE_MILES = 12;
 export const RIDER_COUNT = 3;
-
-// Map coordinate space (shared by roads, route, markers, regroup points).
-const CONTROL_POINTS = [
-  [109, 655], [166, 625], [232, 612], [289, 575], [320, 515], [368, 462], [434, 442], [494, 418],
-  [531, 366], [579, 322], [635, 303], [674, 268], [692, 214], [683, 160], [709, 118],
-];
-
-function sampleCurve(points, samplesPerSegment = 20) {
-  const pts = [points[0], ...points, points[points.length - 1]];
-  const out = [];
-  for (let i = 1; i < pts.length - 2; i++) {
-    const [p0, p1, p2, p3] = [pts[i - 1], pts[i], pts[i + 1], pts[i + 2]];
-    for (let s = 0; s < samplesPerSegment; s++) {
-      const t = s / samplesPerSegment;
-      const t2 = t * t;
-      const t3 = t2 * t;
-      const at = (k) =>
-        0.5 * (2 * p1[k] + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t3);
-      out.push({ x: at(0), y: at(1) });
-    }
-  }
-  const last = points[points.length - 1];
-  out.push({ x: last[0], y: last[1] });
-  return out;
-}
-
-export const ROUTE = sampleCurve(CONTROL_POINTS);
+export const ROUTE_COORDS = ROUTE_DATA.coordinates;
+export const ROUTE_MILES = ROUTE_DATA.distanceMeters / 1609.344;
+export const ROUTE_MINUTES = ROUTE_DATA.durationSeconds / 60;
 
 const cumulative = [0];
-for (let i = 1; i < ROUTE.length; i++) {
-  cumulative.push(cumulative[i - 1] + Math.hypot(ROUTE[i].x - ROUTE[i - 1].x, ROUTE[i].y - ROUTE[i - 1].y));
-}
-export const ROUTE_LENGTH = cumulative[cumulative.length - 1];
+for (let i = 1; i < ROUTE_COORDS.length; i++) cumulative.push(cumulative[i - 1] + distance(ROUTE_COORDS[i - 1], ROUTE_COORDS[i]));
+const LENGTH = cumulative[cumulative.length - 1];
 
 const clamp01 = (n) => Math.min(1, Math.max(0, n));
+const minutesToF = (m) => m / ROUTE_MINUTES;
 
-function indexAt(distance) {
+function indexAt(d) {
   let lo = 0;
   let hi = cumulative.length - 1;
   while (lo < hi - 1) {
     const mid = (lo + hi) >> 1;
-    if (cumulative[mid] <= distance) lo = mid;
+    if (cumulative[mid] <= d) lo = mid;
     else hi = mid;
   }
   return lo;
 }
 
-/** Point on the route at fraction f (0 = start, 1 = end). */
+/** [lon, lat] at route fraction f (0 = start, 1 = end). */
 export function pointAt(f) {
-  const d = clamp01(f) * ROUTE_LENGTH;
+  const d = clamp01(f) * LENGTH;
   const i = indexAt(d);
-  const a = ROUTE[i];
-  const b = ROUTE[Math.min(i + 1, ROUTE.length - 1)];
+  const a = ROUTE_COORDS[i];
+  const b = ROUTE_COORDS[Math.min(i + 1, ROUTE_COORDS.length - 1)];
   const seg = cumulative[Math.min(i + 1, cumulative.length - 1)] - cumulative[i];
   const t = seg === 0 ? 0 : (d - cumulative[i]) / seg;
-  return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 }
 
-const fmt = (n) => Math.round(n * 10) / 10;
-
-/** SVG path data for the whole route. */
-export const ROUTE_PATH = 'M ' + ROUTE.map((p) => `${fmt(p.x)},${fmt(p.y)}`).join(' L ');
-
-/** SVG path data for the part of the route from the start up to fraction f. */
-export function pathUpTo(f) {
-  const d = clamp01(f) * ROUTE_LENGTH;
+/** Route points from the start up to fraction f. */
+export function coordsUpTo(f) {
+  const d = clamp01(f) * LENGTH;
   const i = indexAt(d);
-  const end = pointAt(f);
-  const pts = ROUTE.slice(0, i + 1).map((p) => `${fmt(p.x)},${fmt(p.y)}`);
-  pts.push(`${fmt(end.x)},${fmt(end.y)}`);
-  return 'M ' + pts.join(' L ');
+  return [...ROUTE_COORDS.slice(0, i + 1), pointAt(f)];
 }
 
+// Riders at the start of every run: Maya at the back, You 3 min ahead of her, Alex 2 min ahead of you.
 export const RIDERS = [
-  { id: 'alex', name: 'Alex', initial: 'A', start: 0.62 },
-  { id: 'you', name: 'You', initial: 'Y', start: 0.54, isYou: true },
-  { id: 'maya', name: 'Maya', initial: 'M', start: 0.42 },
+  { id: 'alex', name: 'Alex', initial: 'A', start: 0.02 + minutesToF(5) },
+  { id: 'you', name: 'You', initial: 'Y', start: 0.02 + minutesToF(3), isYou: true },
+  { id: 'maya', name: 'Maya', initial: 'M', start: 0.02 },
 ];
 
-export const REGROUP_SPOTS = [
-  { id: 'overlook', name: 'Ridge Overlook', context: 'Viewpoint with room to park', f: 0.76 },
-  { id: 'cafe', name: 'Millstone Café', context: 'Coffee and a short break', f: 0.88 },
-  { id: 'lakeside', name: 'Lakeside Picnic Area', context: 'Open lot by the water', f: 0.97 },
-];
-export const DEFAULT_REGROUP_ID = 'cafe';
-
+export const REGROUP_SPOTS = ROUTE_DATA.places;
+export const DEFAULT_REGROUP_ID = 'north-lookout';
 export const getRider = (id) => RIDERS.find((r) => r.id === id);
-export const getRegroup = (id) => REGROUP_SPOTS.find((s) => s.id === id) ?? REGROUP_SPOTS[1];
+export const getRegroup = (id) => REGROUP_SPOTS.find((s) => s.id === id) ?? REGROUP_SPOTS.find((s) => s.id === DEFAULT_REGROUP_ID);
 
-const rider = (id) => getRider(id);
-
-/** Whole minutes between two riders, from the gap in their route positions. */
-export function gapMinutes(aheadId, behindId) {
-  return Math.round((rider(aheadId).start - rider(behindId).start) * ROUTE_MINUTES);
+/** Where a rider is after the group has travelled `s` (route fraction): they stop and wait at the regroup spot. */
+export function riderProgress(id, s, regroupId) {
+  return Math.min(getRider(id).start + Math.max(0, s), getRegroup(regroupId).f);
 }
 
-/** Status line for the crew list, relative to the viewer ("You"). */
-export function statusFor(id) {
+export const hasArrived = (id, s, regroupId) => riderProgress(id, s, regroupId) >= getRegroup(regroupId).f - 1e-9;
+
+/** Travel needed until the last rider reaches the regroup spot. */
+export function runLength(regroupId) {
+  return getRegroup(regroupId).f - Math.min(...RIDERS.map((r) => r.start));
+}
+
+/** Status line for the crew list, always relative to "You" and derived from the same positions the map shows. */
+export function statusFor(id, s, regroupId) {
+  if (hasArrived(id, s, regroupId)) return 'At the regroup point';
   if (id === 'you') return 'On route';
-  if (rider(id).start > rider('you').start) return `Up ahead · ${gapMinutes(id, 'you')} min`;
-  return `Behind you · ${gapMinutes('you', id)} min`;
+  const gap = (riderProgress(id, s, regroupId) - riderProgress('you', s, regroupId)) * ROUTE_MINUTES;
+  const minutes = Math.round(Math.abs(gap));
+  if (minutes < 1) return gap > 0 ? 'Just ahead' : 'Just behind';
+  return gap > 0 ? `Up ahead · ${minutes} min` : `Behind you · ${minutes} min`;
 }
 
-/** Spoken version of the status, for accessible names. */
-export function statusSpoken(id) {
-  if (id === 'you') return 'you, on route';
-  const minutes = id === 'alex' ? gapMinutes('alex', 'you') : gapMinutes('you', id);
-  const unit = minutes === 1 ? 'minute' : 'minutes';
-  return `${rider(id).name}, ${rider(id).start > rider('you').start ? 'up ahead' : 'behind you'} ${minutes} ${unit}`;
+/** Spoken version of the status for a rider's accessible name. */
+export function statusSpoken(id, s, regroupId) {
+  const name = id === 'you' ? 'You' : getRider(id).name;
+  return `${name}, ${statusFor(id, s, regroupId).replace(' · ', ', ').replace(/(\d+) min/, (_, n) => `${n} minute${n === '1' ? '' : 's'}`).toLowerCase()}`;
 }
 
-/** Route fraction a rider has reached when the group has moved `s` along the route. */
-export const riderProgress = (id, s) => clamp01(rider(id).start + s);
-
-/** How far the group travels before the leader reaches the regroup spot. */
-export function maxProgress(regroupId) {
-  return Math.max(0, getRegroup(regroupId).f - rider('alex').start);
+function formatDistance(miles) {
+  if (miles < 0.19) return `In ${Math.max(100, Math.round((miles * 5280) / 100) * 100)} ft`;
+  return `In ${miles.toFixed(1)} mi`;
 }
 
-const TURNS = [
-  { at: 0.3, text: 'Left onto Quarry Road', icon: 'left' },
-  { at: 0.607, text: 'Right onto Ridge Road', icon: 'right' },
-  { at: 0.78, text: 'Left onto Mill Road', icon: 'left' },
-];
-
-/** Next instruction for the viewer at route fraction f, heading to the given regroup spot. */
+/** Next instruction for the viewer at route fraction f, heading to the regroup spot. */
 export function nextInstruction(f, regroupId) {
   const spot = getRegroup(regroupId);
-  const turn = TURNS.find((t) => t.at > f + 1e-9 && t.at < spot.f);
-  const target = turn ?? { at: spot.f, text: `Arrive at ${spot.name}`, icon: 'pin' };
-  const miles = Math.max(0, (target.at - f) * ROUTE_MILES);
-  return {
-    text: target.text,
-    icon: target.icon,
-    distance: miles < 0.1 ? 'Ahead' : `In ${fmt(miles).toFixed(1)} mi`,
-  };
+  if (f >= spot.f - 1e-9) return { text: `You're at ${spot.name}`, distance: 'Waiting for the crew', icon: 'pin' };
+  const step = ROUTE_DATA.steps.find((st) => st.f > f + 1e-6 && st.f < spot.f - 1e-6);
+  const target = step ?? { f: spot.f, text: `Arrive at ${spot.name}`, icon: 'pin' };
+  return { text: target.text, icon: target.icon, distance: formatDistance((target.f - f) * ROUTE_MILES) };
 }
+
+// ---------- state ----------
 
 export const initialRideState = {
   selected: 'you',
   regroupId: DEFAULT_REGROUP_ID,
-  playback: 'paused', // 'paused' | 'playing' | 'finished'
+  playback: 'playing', // 'playing' | 'paused' | 'finished'
+  userPaused: false, // a manual pause sticks until the visitor presses play
+  resumeAfterChooser: false,
   chooserOpen: false,
-  resetKey: 0, // bumps whenever playback position must return to the start
+  resetKey: 0, // bumps whenever the run must start over
   announcement: '',
 };
 
@@ -156,31 +117,30 @@ export function rideReducer(state, action) {
     case 'select':
       return RIDERS.some((r) => r.id === action.id) ? { ...state, selected: action.id } : state;
     case 'openChooser':
-      return { ...state, chooserOpen: true, playback: state.playback === 'playing' ? 'paused' : state.playback };
+      return { ...state, chooserOpen: true, resumeAfterChooser: state.playback === 'playing', playback: state.playback === 'playing' ? 'paused' : state.playback };
     case 'closeChooser':
-      return state.chooserOpen ? { ...state, chooserOpen: false } : state;
+      if (!state.chooserOpen) return state;
+      return { ...state, chooserOpen: false, resumeAfterChooser: false, playback: state.resumeAfterChooser ? 'playing' : state.playback };
     case 'chooseRegroup': {
       if (!REGROUP_SPOTS.some((s) => s.id === action.id)) return state;
-      if (action.id === state.regroupId) return { ...state, chooserOpen: false };
+      if (action.id === state.regroupId) return rideReducer(state, { type: 'closeChooser' });
       return {
         ...state,
         regroupId: action.id,
         chooserOpen: false,
-        playback: 'paused',
+        resumeAfterChooser: false,
+        playback: state.userPaused ? 'paused' : 'playing',
         resetKey: state.resetKey + 1,
         announcement: `Demo regroup updated for all ${RIDER_COUNT} riders.`,
       };
     }
     case 'play':
       if (state.playback === 'playing') return state;
-      return {
-        ...state,
-        chooserOpen: false,
-        playback: 'playing',
-        resetKey: state.playback === 'finished' ? state.resetKey + 1 : state.resetKey,
-      };
+      return { ...state, chooserOpen: false, userPaused: false, playback: 'playing', resetKey: state.playback === 'finished' ? state.resetKey + 1 : state.resetKey };
     case 'pause':
-      return state.playback === 'playing' ? { ...state, playback: 'paused' } : state;
+      return state.playback === 'playing' ? { ...state, playback: 'paused', userPaused: true } : state;
+    case 'stopForMotion': // reduced motion: never start on its own
+      return state.playback === 'playing' && !state.userPaused && state.resetKey === 0 ? { ...state, playback: 'paused' } : state;
     case 'finish':
       return state.playback === 'playing' ? { ...state, playback: 'finished' } : state;
     case 'clearAnnouncement':

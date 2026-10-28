@@ -1,70 +1,83 @@
-import { useCallback, useLayoutEffect, useEffect, useRef } from 'react';
-import { Coffee, CornerUpLeft, CornerUpRight, MapPin, Mountain, Pause, Play, RotateCcw, Waves } from 'lucide-react';
-import MapArt from './MapArt';
-import { RIDERS, RIDER_COUNT, getRegroup, pathUpTo, pointAt, riderProgress, statusSpoken } from './rideDemo';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { CornerUpLeft, CornerUpRight, MapPin, Pause, Play, RotateCcw } from 'lucide-react';
+import FRAMES from './rideFrames.json';
+import { project } from './geo';
+import { RIDERS, RIDER_COUNT, ROUTE_COORDS, coordsUpTo, getRegroup, pointAt, riderProgress, statusSpoken } from './rideDemo';
 
-const VIEWBOX = {
-  desktop: { x: 0, y: 80, w: 1200, h: 600, k: 1, route: { casing: 11, line: 5 } },
-  tablet: { x: 20, y: 80, w: 900, h: 600, k: 1.35, route: { casing: 10, line: 4.5 } },
-  mobile: { x: 60, y: 60, w: 680, h: 680, k: 2, route: { casing: 9, line: 4 } },
+const TURN_ICONS = { left: CornerUpLeft, right: CornerUpRight, pin: MapPin };
+const ROUTE_STYLE = {
+  desktop: { casing: 9, line: 5 },
+  tablet: { casing: 8, line: 4.5 },
+  mobile: { casing: 6, line: 3.5 },
 };
 
-const REGROUP_ICONS = { cafe: Coffee, overlook: Mountain, lakeside: Waves };
-const TURN_ICONS = { left: CornerUpLeft, right: CornerUpRight, pin: MapPin };
+const pct = (v) => `${(v * 100).toFixed(3)}%`;
+const toPath = (pts) => 'M ' + pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L ');
 
-const percent = (v) => `${(v * 100).toFixed(3)}%`;
-
-export default function RideDemoMap({ layout, selected, onSelect, regroupId, nav, playback, onTogglePlay, progressRef, subscribe }) {
-  const vb = VIEWBOX[layout];
+export default function RideDemoMap({ layout, s, selected, onSelect, regroupId, nav, playback, onTogglePlay, sRef, subscribe, fading }) {
+  const frame = FRAMES[layout];
+  const route = ROUTE_STYLE[layout];
   const markerRefs = useRef({});
   const travelRef = useRef(null);
+  const [imageFailed, setImageFailed] = useState(false);
   const regroup = getRegroup(regroupId);
 
-  const place = useCallback(
-    (f) => {
-      const p = pointAt(f);
-      return { left: percent((p.x - vb.x) / vb.w), top: percent((p.y - vb.y) / vb.h) };
-    },
-    [vb],
-  );
+  const fullPath = useMemo(() => toPath(ROUTE_COORDS.map((c) => project(c, frame))), [frame]);
+  const place = useCallback((f) => {
+    const p = project(pointAt(f), frame);
+    return { left: pct(p.x / frame.width), top: pct(p.y / frame.height) };
+  }, [frame]);
 
-  // Write positions straight to the DOM so playback does not re-render React every frame.
-  const apply = useCallback(
-    (s) => {
-      for (const rider of RIDERS) {
-        const el = markerRefs.current[rider.id];
-        if (!el) continue;
-        const pos = place(riderProgress(rider.id, s));
-        el.style.left = pos.left;
-        el.style.top = pos.top;
-      }
-      travelRef.current?.setAttribute('d', pathUpTo(riderProgress('alex', s)));
-    },
-    [place],
-  );
+  // Write positions straight to the DOM so the animation does not re-render React every frame.
+  const apply = useCallback((value) => {
+    for (const rider of RIDERS) {
+      const el = markerRefs.current[rider.id];
+      if (!el) continue;
+      const pos = place(riderProgress(rider.id, value, regroupId));
+      el.style.left = pos.left;
+      el.style.top = pos.top;
+    }
+    travelRef.current?.setAttribute('d', toPath(coordsUpTo(riderProgress('alex', value, regroupId)).map((c) => project(c, frame))));
+  }, [place, frame, regroupId]);
 
   useLayoutEffect(() => {
-    apply(progressRef.current);
+    apply(sRef.current);
   });
   useEffect(() => subscribe(apply), [subscribe, apply]);
 
   const TurnIcon = TURN_ICONS[nav.icon] ?? CornerUpRight;
-  const RegroupIcon = REGROUP_ICONS[regroup.id] ?? MapPin;
-  const regroupPos = place(regroup.f);
   const playLabel = playback === 'playing' ? 'Pause demo' : playback === 'finished' ? 'Replay demo' : 'Play demo';
   const PlayIcon = playback === 'playing' ? Pause : playback === 'finished' ? RotateCcw : Play;
+  const src = (scale) => `/ride-map/${layout}@${scale}x.webp`;
 
   return (
-    <div className={`lr-map lr-map--${layout}`} style={{ aspectRatio: `${vb.w} / ${vb.h}` }}>
+    <div className={`lr-map lr-map--${layout}${fading ? ' is-fading' : ''}`} style={{ aspectRatio: `${frame.width} / ${frame.height}` }}>
+      {!imageFailed && (
+        <img
+          className="lr-map-img"
+          src={src(1)}
+          srcSet={`${src(1)} 1x, ${src(2)} 2x`}
+          width={frame.width}
+          height={frame.height}
+          alt=""
+          decoding="async"
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+        />
+      )}
+
       <svg
         className="lr-map-svg"
-        viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
-        preserveAspectRatio="xMidYMid slice"
+        viewBox={`0 0 ${frame.width} ${frame.height}`}
         role="img"
-        aria-label="Illustrative map of a group ride. Alex is two minutes ahead of you and Maya is three minutes behind, all heading to a demo regroup point."
+        aria-label={`Map of a demo group ride from Beanblossom through Nashville, Indiana into Brown County State Park. Alex is ahead of you, Maya is behind, and the regroup point is ${regroup.name}.`}
       >
-        <MapArt layout={layout} k={vb.k} route={vb.route} />
-        <path ref={travelRef} d={pathUpTo(riderProgress('alex', 0))} fill="none" stroke="#E54E57" strokeWidth={vb.route.line} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path d={fullPath} stroke="#B9B4A3" strokeOpacity=".55" strokeWidth={route.casing + 2} />
+          <path d={fullPath} stroke="#FFFFFF" strokeWidth={route.casing} />
+          <path d={fullPath} stroke="#E54E57" strokeOpacity=".28" strokeWidth={route.line} />
+          <path ref={travelRef} className="lr-travelled" stroke="#E54E57" strokeWidth={route.line} />
+        </g>
       </svg>
 
       <div className="lr-nav-card" role="group" aria-label="Next turn">
@@ -75,14 +88,15 @@ export default function RideDemoMap({ layout, selected, onSelect, regroupId, nav
         </div>
       </div>
 
-      <div className="lr-regroup" style={regroupPos} role="img" aria-label={`Demo regroup point: ${regroup.name}`}>
-        <span className="lr-regroup-pin"><RegroupIcon size={18} strokeWidth={2.2} aria-hidden="true" /></span>
+      {/* State road shield on the SR 135 stretch (the base map only draws US-route shields here). */}
+      <span className="lr-shield" style={place(0.47)} aria-hidden="true">135</span>
+
+      <div className="lr-regroup" style={place(regroup.f)} role="img" aria-label={`Demo regroup point: ${regroup.name}`}>
+        <span className="lr-regroup-pin"><MapPin size={18} strokeWidth={2.4} aria-hidden="true" /></span>
         <span className="lr-regroup-label">Regroup · {regroup.name}</span>
       </div>
 
       {RIDERS.map((rider) => {
-        // Starting position only; the layout effect above moves markers to the live position before paint.
-        const pos = place(riderProgress(rider.id, 0));
         const isSelected = selected === rider.id;
         return (
           <button
@@ -90,9 +104,10 @@ export default function RideDemoMap({ layout, selected, onSelect, regroupId, nav
             ref={(el) => { markerRefs.current[rider.id] = el; }}
             type="button"
             className={`lr-marker${rider.isYou ? ' is-you' : ''}${isSelected ? ' is-selected' : ''}`}
-            style={pos}
+            // Starting position only; the layout effect above moves markers to the live position before paint.
+            style={place(rider.start)}
             aria-pressed={isSelected}
-            aria-label={statusSpoken(rider.id)}
+            aria-label={statusSpoken(rider.id, s, regroupId)}
             onClick={() => onSelect(rider.id)}
           >
             <span className="lr-marker-dot" aria-hidden="true">{rider.initial}</span>
@@ -105,7 +120,13 @@ export default function RideDemoMap({ layout, selected, onSelect, regroupId, nav
         <PlayIcon size={16} strokeWidth={2.4} aria-hidden="true" />
         <span>{playLabel} · {RIDER_COUNT} riders</span>
       </button>
-      <span className="lr-illustrative">Illustrative map</span>
+
+      <p className="lr-attribution">
+        Illustrative ride · Map data{' '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a>,{' '}
+        <a href="https://openmaptiles.org/" target="_blank" rel="noreferrer">OpenMapTiles</a>,{' '}
+        <a href="https://openfreemap.org/" target="_blank" rel="noreferrer">OpenFreeMap</a> · Terrain: AWS Terrain Tiles, USGS
+      </p>
     </div>
   );
 }

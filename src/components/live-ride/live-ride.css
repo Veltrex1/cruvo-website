@@ -99,12 +99,30 @@
   color: var(--onyx);
 }
 
+.lr-map-img,
 .lr-map-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.lr-map-img {
+  object-fit: cover;
+}
+
+/* Riders, route progress and the turn hint fade out and back in when the demo loops. */
+.lr-map .lr-travelled,
+.lr-marker,
+.lr-nav-card > div {
+  transition: opacity 0.4s ease;
+}
+
+.lr-map.is-fading .lr-travelled,
+.lr-map.is-fading .lr-marker,
+.lr-map.is-fading .lr-nav-card > div {
+  opacity: 0;
 }
 
 .lr-nav-card {
@@ -204,6 +222,21 @@
   box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--onyx);
 }
 
+.lr-shield {
+  position: absolute;
+  z-index: 1;
+  transform: translate(14px, -50%);
+  padding: 2px 6px;
+  border: 1.5px solid #3f4a4a;
+  border-radius: 5px;
+  background: #fff;
+  color: #2a3232;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
 /* ---------- regroup marker ---------- */
 
 .lr-regroup {
@@ -281,18 +314,26 @@
   outline-offset: 2px;
 }
 
-.lr-illustrative {
+.lr-attribution {
   position: absolute;
-  right: 16px;
-  bottom: 14px;
+  right: 12px;
+  bottom: 10px;
   z-index: 3;
+  max-width: calc(100% - 300px);
+  margin: 0;
   padding: 5px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
   color: #3f4a4a;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.lr-attribution a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* ---------- crew card ---------- */
@@ -631,9 +672,27 @@
   }
 }
 
-@media (max-width: 479px) {
-  .lr-illustrative {
-    display: none;
+@media (max-width: 767px) {
+  .lr-map {
+    overflow: visible;
+    margin-bottom: 44px;
+  }
+
+  .lr-map-img,
+  .lr-map-svg {
+    border-radius: 22px;
+  }
+
+  .lr-attribution {
+    top: calc(100% + 8px);
+    bottom: auto;
+    left: 0;
+    right: 0;
+    max-width: none;
+    padding: 0;
+    background: none;
+    color: rgba(248, 248, 248, 0.6);
+    text-align: left;
   }
 }
 

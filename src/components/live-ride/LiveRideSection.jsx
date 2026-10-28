@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import CrewPanel from './CrewPanel';
 import RideDemoMap from './RideDemoMap';
 import { useLayout, useRideDemo } from './useRideDemo';
@@ -7,21 +7,7 @@ import './live-ride.css';
 export default function LiveRideSection() {
   const sectionRef = useRef(null);
   const layout = useLayout();
-  const { state, dispatch, nav, progressRef, subscribe } = useRideDemo();
-
-  // Pause (never resume) when the section scrolls out of view.
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) dispatch({ type: 'pause' });
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [dispatch]);
+  const { state, dispatch, s: runPosition, nav, sRef, subscribe, fading } = useRideDemo(sectionRef);
 
   const togglePlay = () => dispatch({ type: state.playback === 'playing' ? 'pause' : 'play' });
 
@@ -51,10 +37,13 @@ export default function LiveRideSection() {
             nav={nav}
             playback={state.playback}
             onTogglePlay={togglePlay}
-            progressRef={progressRef}
+            s={runPosition}
+            sRef={sRef}
             subscribe={subscribe}
+            fading={fading}
           />
           <CrewPanel
+            s={runPosition}
             selected={state.selected}
             onSelect={(id) => dispatch({ type: 'select', id })}
             regroupId={state.regroupId}

@@ -28,3 +28,6 @@ dist-ssr
 .env
 # Impeccable engine binary (platform-specific; its launcher downloads it on first run)
 .claude/skills/impeccable/scripts/bin/
+
+# Map renderer downloads (scripts/ride-map/render.mjs fetches these when it runs)
+scripts/ride-map/vendor/

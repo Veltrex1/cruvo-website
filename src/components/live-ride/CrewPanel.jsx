@@ -1,14 +1,11 @@
 import { useRef } from 'react';
-import { Coffee, Mountain, Plus, Waves, MapPin } from 'lucide-react';
+import { MapPin, Plus } from 'lucide-react';
 import RegroupChooser from './RegroupChooser';
 import { RIDERS, RIDER_COUNT, getRegroup, statusFor } from './rideDemo';
 
-const REGROUP_ICONS = { cafe: Coffee, overlook: Mountain, lakeside: Waves };
-
-export default function CrewPanel({ selected, onSelect, regroupId, chooserOpen, onOpenChooser, onChoose, onCloseChooser }) {
+export default function CrewPanel({ s, selected, onSelect, regroupId, chooserOpen, onOpenChooser, onChoose, onCloseChooser }) {
   const buttonRef = useRef(null);
   const regroup = getRegroup(regroupId);
-  const RegroupIcon = REGROUP_ICONS[regroup.id] ?? MapPin;
 
   const close = ({ restoreFocus }) => {
     onCloseChooser();
@@ -40,7 +37,7 @@ export default function CrewPanel({ selected, onSelect, regroupId, chooserOpen, 
               <span className={`lr-avatar${rider.isYou ? ' is-you' : ''}`} aria-hidden="true">{rider.initial}</span>
               <span className="lr-row-text">
                 <span className="lr-row-name">{rider.name}</span>
-                <span className="lr-row-status">{statusFor(rider.id)}</span>
+                <span className="lr-row-status">{statusFor(rider.id, s, regroupId)}</span>
               </span>
             </button>
           </li>
@@ -48,7 +45,7 @@ export default function CrewPanel({ selected, onSelect, regroupId, chooserOpen, 
       </ul>
 
       <div className="lr-regroup-summary">
-        <span className="lr-regroup-icon" aria-hidden="true"><RegroupIcon size={20} strokeWidth={2.2} /></span>
+        <span className="lr-regroup-icon" aria-hidden="true"><MapPin size={20} strokeWidth={2.2} /></span>
         <div>
           <div className="lr-regroup-title">Meet at {regroup.name}</div>
           <div className="lr-regroup-meta">Demo regroup point</div>
