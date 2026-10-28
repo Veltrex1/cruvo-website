@@ -256,7 +256,7 @@ export default function FooterCTA() {
 
             {status === 'success' ? (
               <div style={{ marginTop: '20px', padding: '16px', background: 'rgba(104, 198, 112, 0.1)', border: '1px solid rgba(104, 198, 112, 0.2)', borderRadius: '12px', color: '#68C670', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                 <span style={{ fontWeight: 600 }}>You're in. We'll send the next Cruvo update soon.</span>
               </div>
             ) : (
