@@ -2,10 +2,10 @@
 export const SITE_ORIGIN = 'https://www.cruvo.co';
 
 export const SITE_PAGES = [
-  { path: '/about', seoTitle: 'About Cruvo: The App for Riders and Drivers', title: 'About', blurb: 'Cruvo started with motorcycles and is expanding to cars, with group rides and drives, scenic routes, garage and community.' },
-  { path: '/clubs', seoTitle: 'Cruvo for Clubs: Tools for Car and Motorcycle Clubs', title: 'Cruvo for Clubs', blurb: 'How Cruvo supports motorcycle and car clubs, and how to get in touch.' },
-  { path: '/support', seoTitle: 'Cruvo Support: Help With Rides, Billing and Account', title: 'Support', blurb: 'Get help with your account, rides, billing, and safety features.' },
-  { path: '/privacy-policy', seoTitle: 'Cruvo Privacy Policy: How We Protect Your Data', title: 'Privacy Policy', blurb: 'How Cruvo collects, uses, and protects your data.' },
-  { path: '/terms', seoTitle: 'Cruvo Terms and Conditions: Rules for Using the App', title: 'Terms and Conditions', blurb: 'The terms that apply when you use Cruvo.' },
-  { path: '/eula', seoTitle: 'Cruvo EULA: End User License Agreement for the App', title: 'Terms of Use (EULA)', blurb: 'The end user license agreement for the Cruvo app.' },
+  { path: '/about', seoTitle: 'About Cruvo: The App for Riders and Drivers', description: 'Cruvo started as a motorcycle app and is expanding to cars, with group rides and drives, scenic routes, a shared garage, a rider community, and charity rides.', title: 'About', blurb: 'Cruvo started with motorcycles and is expanding to cars, with group rides and drives, scenic routes, garage and community.' },
+  { path: '/clubs', seoTitle: 'Cruvo for Clubs: Tools for Car and Motorcycle Clubs', description: 'How Cruvo supports motorcycle and car clubs with group rides and drives, shared routes, member updates, and charity events, plus a form to contact the team.', title: 'Cruvo for Clubs', blurb: 'How Cruvo supports motorcycle and car clubs, and how to get in touch.' },
+  { path: '/support', seoTitle: 'Cruvo Support: Help With Rides, Billing and Account', description: 'Email Cruvo support for help with sign-in, billing, ride planning and navigation, SOS safety features, ride history, or deleting your account.', title: 'Support', blurb: 'Get help with your account, rides, billing, and safety features.' },
+  { path: '/privacy-policy', seoTitle: 'Cruvo Privacy Policy: How We Protect Your Data', description: 'How Cruvo collects, uses, and protects your data, including location and device permissions, what other riders can see, data retention, and your rights.', title: 'Privacy Policy', blurb: 'How Cruvo collects, uses, and protects your data.' },
+  { path: '/terms', seoTitle: 'Cruvo Terms and Conditions: Rules for Using the App', description: 'The terms for using Cruvo: accounts, subscriptions, community content and standards, rider safety, location services, account deletion, and disputes.', title: 'Terms and Conditions', blurb: 'The terms that apply when you use Cruvo.' },
+  { path: '/eula', seoTitle: 'Cruvo EULA: End User License Agreement for the App', description: 'The license agreement for the Cruvo app: what you may and may not do with it, in-app purchases, support, warranty, and how the license can end.', title: 'Terms of Use (EULA)', blurb: 'The end user license agreement for the Cruvo app.' },
 ];

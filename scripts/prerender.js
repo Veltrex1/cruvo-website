@@ -25,9 +25,12 @@ export function prerenderPages(indexHtml) {
     if (title.length < 30 || title.length > 60) {
       throw new Error(`Title for ${page.path} is ${title.length} characters; keep it between 30 and 60.`);
     }
+    if (page.description.length < 110 || page.description.length > 160) {
+      throw new Error(`Meta description for ${page.path} is ${page.description.length} characters; keep it between 110 and 160.`);
+    }
     const html = indexHtml
       .replace(/<title>[^<]*<\/title>/, `<title>${escape(title)}</title>`)
-      .replace(/(<meta name="description" content=")[^"]*(")/, `$1${escape(page.blurb)}$2`)
+      .replace(/(<meta name="description" content=")[^"]*(")/, `$1${escape(page.description)}$2`)
       .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${SITE_ORIGIN}${page.path}$2`)
       .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${escape(title)}$2`)
       .replace(/<div id="root">[\s\S]*?<\/div>\s*(?=<script|<\/body>)/, `${pageBody(page).trim()}\n    `);
