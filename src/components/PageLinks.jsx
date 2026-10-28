@@ -1,9 +1,4 @@
-const PAGES = [
-  { path: '/support', title: 'Support', blurb: 'Get help with your account, rides, billing, and safety features.' },
-  { path: '/privacy-policy', title: 'Privacy Policy', blurb: 'How Cruvo collects, uses, and protects your data.' },
-  { path: '/terms', title: 'Terms and Conditions', blurb: 'The terms that apply when you use Cruvo.' },
-  { path: '/eula', title: 'Terms of Use (EULA)', blurb: 'The end user license agreement for the Cruvo app.' },
-];
+import { SITE_PAGES } from '../data/sitePages';
 
 const styles = `
   .page-links {
@@ -89,7 +84,7 @@ export function Breadcrumbs({ current }) {
 }
 
 export function RelatedPages({ currentPath }) {
-  const related = PAGES.filter((page) => page.path !== currentPath);
+  const related = SITE_PAGES.filter((page) => page.path !== currentPath);
   return (
     <aside className="page-links related-pages" aria-label="Related">
       <style>{styles}</style>
