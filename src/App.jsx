@@ -6,6 +6,11 @@ import AppShowcase from './components/AppShowcase';
 import MapDemo from './components/MapDemo';
 import PricingCards from './components/PricingCards';
 import FooterCTA from './components/FooterCTA';
+import Testimonials from './components/Testimonials';
+import TrustStrip from './components/TrustStrip';
+import FAQ from './components/FAQ';
+import FounderBlock from './components/FounderBlock';
+import { ROUTE_META } from './data/routeMeta';
 import Preloader from './components/Preloader';
 import LegalPage from './components/LegalPage';
 import SupportPage from './components/SupportPage';
@@ -16,7 +21,19 @@ import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import { getShareRoute } from './share-routes';
 import './App.css';
 
-const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support'];
+const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support', ...Object.keys(ROUTE_META)];
+
+const NAV_LINKS = [
+  { label: "Features", href: "/features", target: "#features" },
+  { label: "How it works", href: "/#how", target: "#how" },
+  { label: "Pricing", href: "/pricing", target: "#pricing" },
+  { label: "FAQ", href: "/faq", target: "#faq" }
+];
+
+function scrollToSection(selector, fallback) {
+  const el = document.querySelector(selector) || (fallback && document.querySelector(fallback));
+  el?.scrollIntoView({ behavior: 'smooth' });
+}
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +55,19 @@ function App() {
       window.location.replace('/');
     }
   }, [currentPath, shareRoute]);
+
+  const routeMeta = ROUTE_META[currentPath];
+
+  // Per-route title, and jump to the matching section once the preloader is done.
+  useEffect(() => {
+    if (routeMeta) document.title = routeMeta.title;
+  }, [routeMeta]);
+
+  useEffect(() => {
+    if (isLoading || !routeMeta?.section) return undefined;
+    const id = window.setTimeout(() => scrollToSection(routeMeta.section, routeMeta.fallbackSection), 100);
+    return () => window.clearTimeout(id);
+  }, [isLoading, routeMeta]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     // Transition navbar styles when scrolled past 20px
@@ -125,16 +155,12 @@ function App() {
               listStyle: "none", margin: 0, padding: 0,
               justifyContent: "center", gap: 30,
             }}>
-              {[
-                { label: "Features", href: "#features" },
-                { label: "How it works", href: "#how" },
-                { label: "Pricing", href: "#pricing" }
-              ].map(i => (
+              {NAV_LINKS.map(i => (
                 <li key={i.label}>
                   <a href={i.href}
                     onClick={(e) => {
                       e.preventDefault();
-                      document.querySelector(i.href)?.scrollIntoView({ behavior: 'smooth' });
+                      scrollToSection(i.target);
                     }}
                     style={{
                       fontSize: 14, fontWeight: 500, color: "#fff",
@@ -162,6 +188,7 @@ function App() {
               {/* Hamburger Button (Mobile Only) */}
               <button 
                 className="mobile-menu-btn"
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 style={{ background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
@@ -191,18 +218,14 @@ function App() {
                 display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center'
               }}
             >
-              {[
-                { label: "Features", href: "#features" },
-                { label: "How it works", href: "#how" },
-                { label: "Pricing", href: "#pricing" }
-              ].map(i => (
+              {NAV_LINKS.map(i => (
                 <a key={i.label} href={i.href}
                   onClick={(e) => {
                     e.preventDefault();
                     setIsMobileMenuOpen(false);
-                    document.querySelector(i.href)?.scrollIntoView({ behavior: 'smooth' });
+                    scrollToSection(i.target);
                   }}
-                  style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', textDecoration: 'none' }}
+                  style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', textDecoration: 'none', padding: '10px 24px', minHeight: 44 }}
                 >
                   {i.label}
                 </a>
@@ -215,9 +238,13 @@ function App() {
         <div style={{ position: 'relative', zIndex: 10 }}>
           <Hero />
           <FeaturesGrid />
-          <AppShowcase />
           <MapDemo />
+          <AppShowcase />
+          <Testimonials />
+          <TrustStrip />
           <PricingCards />
+          <FAQ />
+          <FounderBlock />
           <FooterCTA />
         </div>
       </div>

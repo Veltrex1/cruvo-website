@@ -355,19 +355,22 @@ export default function FooterCTA() {
               WebkitMaskPosition: 'center',
             }} title="Cruvo Logo" className="footer-logo-mask" />
             <p style={{ color: '#666', fontSize: '0.95rem', maxWidth: '250px', lineHeight: 1.6 }}>
-              The ultimate toolkit and community for the modern rider.
+              The group ride and drive app for riders, drivers, and their crews.
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: '4rem', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-              <h4 style={{ marginBottom: '0.5rem', color: 'var(--onyx)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Product</h4>
-              <a href="#features" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Features</a>
-              <a href="#how" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>How it works</a>
-              <a href="#pricing" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Pricing</a>
+              <h3 style={{ marginBottom: '0.5rem', color: 'var(--onyx)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Product</h3>
+              <a href="/features" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Features</a>
+              <a href="/#how" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>How it works</a>
+              <a href="/pricing" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Pricing</a>
+              <a href="/faq" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>FAQ</a>
+              <a href="/about" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>About</a>
+              <a href="/customers" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Community</a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-              <h4 style={{ marginBottom: '0.5rem', color: 'var(--onyx)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Legal</h4>
+              <h3 style={{ marginBottom: '0.5rem', color: 'var(--onyx)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Legal</h3>
               <a href="/privacy-policy" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Privacy Policy</a>
               <a href="/terms" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Terms and Conditions</a>
               <a href="/eula" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Terms of Use (EULA)</a>

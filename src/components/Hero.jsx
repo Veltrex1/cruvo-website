@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import PhoneMockup from './PhoneMockup';
 import AppStoreBadgeLink from './AppStoreBadgeLink';
 import GooglePlayBadgeLink from './GooglePlayBadgeLink';
+import { HeroRating } from './TrustStrip';
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -84,6 +85,43 @@ export default function Hero() {
           text-shadow: 0 4px 20px rgba(0,0,0,0.5);
           line-height: 1.1;
         }
+        .hero-eyebrow {
+          display: inline-block;
+          margin: 0 0 1rem 0;
+          padding: 6px 14px;
+          border-radius: 999px;
+          background: rgba(229,78,87,0.16);
+          color: #FFB3B8;
+          font-size: 0.8rem;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+        }
+        .hero-garage-line {
+          font-size: 1rem;
+          color: #fff;
+          max-width: 440px;
+          line-height: 1.5;
+          margin: 0 0 1.5rem 0;
+          padding-left: 12px;
+          border-left: 3px solid var(--coral-red);
+        }
+        .hero-cta-note {
+          font-size: 0.9rem;
+          color: #aaa;
+          margin: 0 0 0.75rem 0;
+        }
+        .hero-secondary-link {
+          color: #fff;
+          font-weight: 600;
+          font-size: 0.95rem;
+          text-decoration: underline;
+          text-underline-offset: 4px;
+          padding: 10px 4px;
+        }
+        .hero-secondary-link:hover {
+          color: var(--coral-red);
+        }
         .hero-buttons {
           display: flex;
           gap: 1rem;
@@ -129,6 +167,22 @@ export default function Hero() {
             font-size: 2.2rem !important;
             margin-bottom: 0.8rem !important;
           }
+          .hero-eyebrow {
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+            padding: 5px 10px;
+          }
+          .hero-garage-line {
+            font-size: 0.9rem;
+            max-width: 340px;
+            border-left: none;
+            padding-left: 0;
+            margin-bottom: 1rem;
+          }
+          .hero-cta-note {
+            font-size: 0.8rem;
+            max-width: 320px;
+          }
           .hero-desc {
             font-size: 0.95rem !important;
             margin-bottom: 1.5rem !important;
@@ -168,6 +222,15 @@ export default function Hero() {
         {/* Left Content */}
         <div className="hero-left-content">
 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="hero-eyebrow"
+          >
+            Built for group rides and club rideouts
+          </motion.p>
+
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -188,7 +251,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="hero-desc"
-            style={{ fontSize: '1.2rem', color: '#ccc', marginBottom: '3rem', maxWidth: '420px', lineHeight: 1.6 }}
+            style={{ fontSize: '1.2rem', color: '#ccc', marginBottom: '1rem', maxWidth: '440px', lineHeight: 1.6 }}
           >
             <span style={{
               display: 'inline-block',
@@ -204,7 +267,25 @@ export default function Hero() {
               marginTop: '-4px', // subtle optical alignment adjustment
               filter: 'drop-shadow(0 0 15px rgba(255, 74, 74, 0.8))'
             }} title="Cruvo" />
-            is your all-in-one motorcycle app for group rides, live navigation, crew updates, and the community that rides with you.
+            is your all-in-one car and motorcycle app for group rides and drives, live navigation, crew updates, and the community that rides with you.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="hero-garage-line"
+          >
+            One garage for your cars and your bikes. Use it for the motorcycle rideout or the car club drive.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.35 }}
+            className="hero-cta-note"
+          >
+            Free to download on iPhone and Android. Create your first group ride and invite your crew.
           </motion.p>
 
           <motion.div
@@ -221,10 +302,23 @@ export default function Hero() {
               className="store-badge-link"
               imageClassName="google-play-badge"
             />
+            <a
+              href="/pricing"
+              className="hero-secondary-link"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              See what's free vs. Pro →
+            </a>
             {/* <button className="btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
               <Play size={20} /> Watch Video
             </button> */}
           </motion.div>
+
+          <HeroRating />
+
 
           {/* <motion.div
             initial={{ opacity: 0 }}
@@ -274,7 +368,7 @@ export default function Hero() {
               </div> */}
               <img
                 src="/Start.png"
-                alt=""
+                alt="Cruvo app start screen for planning a group ride"
                 style={{
                   width: '100%',
                   height: '100%',
@@ -313,7 +407,7 @@ export default function Hero() {
               </div> */}
               <img
                 src="/Welcome.png"
-                alt=""
+                alt="Cruvo app welcome screen showing group ride setup"
                 style={{
                   width: '100%',
                   height: '100%',

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 const RIDERS = [
   { id: "alex", name: "Alex", role: "Ride captain", color: "#E54E57", t: 1.00, eta: 0, chip: "Lead" },
   { id: "maya", name: "Maya", role: "Photographer", color: "#3B82F6", t: 0.78, eta: 4, chip: "+ 28 mi" },
-  { id: "dev", name: "Dev", role: "Mechanic", color: "#FAA04F", t: 0.62, eta: 7, chip: "On bike" },
+  { id: "dev", name: "Dev", role: "Mechanic", color: "#FAA04F", t: 0.62, eta: 7, chip: "Support car" },
   { id: "priya", name: "Priya", role: "Sweep", color: "#EC4899", t: 0.45, eta: 12, chip: "Tail" },
   { id: "rio", name: "Rio", role: "Rookie", color: "#7A5AE0", t: 0.28, eta: 17, chip: "Catching up" },
 ];
@@ -133,7 +133,7 @@ export default function MapDemo() {
             }}>The map<br />that <span style={{ color: "var(--coral-red)" }}>rides with you.</span></h2>
           </div>
           <p style={{ color: "rgba(255,255,255,.7)", fontSize: '1.1rem', maxWidth: '500px', lineHeight: 1.6, flex: '1 1 400px', margin: 0, textAlign: 'left' }}>
-            See every rider on the road in real time. Drop regroups, run playback, share your live location — without flicking between four other apps.
+            See every rider and driver in your group in real time. Drop regroups, run playback, share your live location, all without flicking between four other apps.
           </p>
         </div>
 
@@ -149,6 +149,20 @@ export default function MapDemo() {
           }
           @media (max-width: 1024px) {
             .map-demo-section {
+              padding-top: 4rem !important;
+              padding-bottom: 4rem !important;
+            }
+            .map-demo-section h2 {
+              font-size: 2.2rem !important;
+            }
+            .map-demo-container {
+              grid-template-columns: minmax(0, 1fr);
+              padding: 0.75rem;
+            }
+            .map-panel {
+              min-height: 380px !important;
+            }
+            .map-layer-toggles {
               display: none !important;
             }
           }
@@ -157,7 +171,7 @@ export default function MapDemo() {
         {/* Demo surface */}
         <div className="map-demo-container">
           {/* Custom SVG Map Panel */}
-          <div style={{
+          <div className="map-panel" style={{
             position: "relative",
             borderRadius: 18,
             background: "#E8F0ED", // Beautiful light theme background
@@ -276,12 +290,12 @@ export default function MapDemo() {
               </svg>
               <div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1 }}>0.8 mi</div>
-                <div style={{ fontSize: '0.8rem', opacity: .7, marginTop: 2 }}>Stay on NH48</div>
+                <div style={{ fontSize: '0.8rem', opacity: .7, marginTop: 2 }}>Stay on US-129</div>
               </div>
             </div>
 
             {/* Layer toggles */}
-            <div style={{
+            <div className="map-layer-toggles" style={{
               position: "absolute", top: 16, right: 16,
               background: "rgba(255,255,255,.94)",
               borderRadius: 12, padding: 6,

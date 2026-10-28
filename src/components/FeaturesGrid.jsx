@@ -94,7 +94,7 @@ export default function FeaturesGrid() {
       <SectionHeader
         eyebrow="Everything a rider needs"
         title={<>One app.<br /><span style={{ color: "var(--coral-red)" }}>Every mile.</span></>}
-        sub="Plan, track, and share your rides all in one place. Built specifically for riders who care about the journey."
+        sub="Plan, track, and share your rides and drives all in one place. Built for riders, drivers, and the crews who care about the journey."
       />
 
       <style>{`
@@ -220,7 +220,7 @@ export default function FeaturesGrid() {
         <TrueBentoCard 
           accent="coral" delay={0.2}
           tag="GROUP RIDES" title="Group Rides"
-          text="Plan, create and join rides instantly."
+          text="Plan a rideout or a car club drive, then invite your crew in seconds."
           imgSrc="/gp1.png" 
         />
 
@@ -228,7 +228,7 @@ export default function FeaturesGrid() {
         <TrueBentoCard 
           accent="teal" delay={0.3}
           tag="NAVIGATION" title="Live Navigation"
-          text="Turn-by-turn routing built specifically to find curviest roads."
+          text="Turn-by-turn navigation built to find the curviest roads."
           imgSrc="/live-navigation.png" 
         />
 
@@ -236,7 +236,7 @@ export default function FeaturesGrid() {
         <TrueBentoCard 
           accent="slate" delay={0.4}
           tag="COMMUNITY" title="Community"
-          text="Share routes and stunning photos with fellow riders."
+          text="Share routes and photos with fellow riders and drivers."
           imgSrc="/Welcome1.png" 
         />
 
@@ -260,7 +260,7 @@ export default function FeaturesGrid() {
         <TrueBentoCard 
           accent="onyx" span2={true} delay={0.7}
           tag="GARAGE" title="Your Garage"
-          text="Track maintenance and perfectly monitor your Bike Performance Index to keep your ride in top shape."
+          text="Track maintenance for every car and bike you own, and monitor your Bike Performance Index to keep your ride in top shape."
           imgSrc="/Start1.png"
         />
 

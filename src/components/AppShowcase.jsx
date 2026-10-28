@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PhoneMockup from './PhoneMockup';
 
 const screens = [
   {
-    title: "Plan the perfect ride",
+    title: "Plan a rideout",
     desc: "Map out your route, set checkpoints, and invite your crew in seconds. Everything is organized before you even kick up the stand.",
     placeholderLabel: "Replace with: Plan/Garage Screen (Portrait PNG)",
     highlight: "01",
@@ -35,35 +35,28 @@ const screens = [
 
 export default function AppShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const containerRef = useRef(null);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Track the scroll progress through the 400vh tall container
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Map scroll progress 0-1 smoothly to index 0-3
-    const newIndex = Math.min(screens.length - 1, Math.floor(latest * screens.length));
-    if (newIndex !== activeIndex) {
-      setActiveIndex(newIndex);
-    }
-  });
-
+  // Gently cycle through the steps until the visitor picks one.
   useEffect(() => {
+    if (!isAutoPlaying) return undefined;
+    const id = window.setInterval(() => {
+      setActiveIndex(i => (i + 1) % screens.length);
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, [isAutoPlaying]);
+
+  const selectTab = (index) => {
+    setIsAutoPlaying(false);
+    setActiveIndex(index);
     if (window.innerWidth <= 1024) {
-      const el = document.getElementById(`showcase-tab-${activeIndex}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
+      document.getElementById(`showcase-tab-${index}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
-  }, [activeIndex]);
+  };
 
   return (
-    // The container is 400vh tall to allow scrolling space. 
-    // We explicitly use display: block to override the App.css flexbox which was centering the sticky child!
-    <section ref={containerRef} id="how" style={{ background: 'var(--snowdrift)', position: 'relative', height: `${screens.length * 100}vh`, padding: 0, display: 'block' }}>
+    // Normal-height section with clickable tabs (was a 400vh sticky scroll showcase).
+    <section id="how" style={{ background: 'var(--snowdrift)', position: 'relative', padding: '6rem 0', minHeight: 'auto', display: 'block' }}>
 
       <style>{`
         .app-showcase-wrapper {
@@ -114,7 +107,6 @@ export default function AppShowcase() {
               gap: 1rem;
               padding-top: 1rem;
               padding-bottom: 1rem;
-              height: 100vh;
             }
             .app-showcase-left {
               padding-right: 0;
@@ -145,17 +137,18 @@ export default function AppShowcase() {
             .app-showcase-right {
               transform: scale(0.7);
               transform-origin: top center;
+              margin-bottom: -180px;
             }
           }
           @media (max-width: 768px) {
             .app-showcase-right {
               transform: scale(0.6);
+              margin-bottom: -240px;
             }
           }
       `}</style>
 
-      {/* Sticky Container locks perfectly to viewport. Added paddingTop to clear the fixed navbar. */}
-      <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', paddingTop: '80px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
 
         <div className="app-showcase-wrapper">
 
@@ -167,7 +160,7 @@ export default function AppShowcase() {
               viewport={{ once: true }}
               style={{ marginBottom: '2rem' }}
             >
-              <h4 style={{ color: 'var(--coral-red)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 800 }}>Seamless Experience</h4>
+              <p style={{ color: 'var(--coral-red)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 800 }}>How it works</p>
               <h2 className="showcase-h2" style={{ color: 'var(--onyx)', lineHeight: 1.1 }}>Designed for the ride.</h2>
             </motion.div>
 
@@ -175,23 +168,21 @@ export default function AppShowcase() {
               {screens.map((screen, index) => {
                 const isActive = index === activeIndex;
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={index}
                     id={`showcase-tab-${index}`}
                     className="tab-item"
+                    aria-pressed={isActive}
                     style={{
                       background: isActive ? '#fff' : 'transparent',
                       border: isActive ? '1px solid rgba(0,0,0,0.05)' : '1px solid transparent',
                       boxShadow: isActive ? '0 20px 40px rgba(0,0,0,0.05)' : 'none',
+                      textAlign: 'left',
+                      font: 'inherit',
+                      width: '100%',
                     }}
-                    onClick={() => {
-                      // Allow manual click overriding (optional interaction)
-                      // A full implementation would scroll the window to the correct section height
-                      window.scrollTo({
-                        top: containerRef.current.offsetTop + (index * window.innerHeight),
-                        behavior: 'smooth'
-                      });
-                    }}
+                    onClick={() => selectTab(index)}
                   >
                     {/* Active Indicator Line */}
                     {isActive && (
@@ -209,7 +200,7 @@ export default function AppShowcase() {
                         <p className="tab-desc" style={{ color: '#666', lineHeight: 1.5, margin: 0 }}>{screen.desc}</p>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>

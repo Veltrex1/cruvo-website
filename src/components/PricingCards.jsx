@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { getStoreUrl } from '../storeLinks';
 
 const tiers = [
   { 
@@ -7,7 +8,10 @@ const tiers = [
     price: "$0", 
     subtitle: "forever", 
     desc: "Everything you need to ride with your crew.", 
-    features: ["Create & join rides", "Live location sharing", "Basic navigation", "Garage for 1 bike", "Community access"], 
+    navNote: "Standard navigation gets the whole group there.",
+    reassurance: "Free forever. No credit card required.",
+    cta: "Get Started Free",
+    features: ["Create & join rides", "Live location sharing", "Basic navigation", "Garage for 1 car or bike", "Community access"], 
     popular: false 
   },
   { 
@@ -15,7 +19,11 @@ const tiers = [
     price: "$9.99", 
     subtitle: "/month", 
     desc: "The complete Cruvo experience. 30-day free trial included.", 
-    features: ["Everything in Basic", "Scenic & curvy routes", "Unlimited bikes in Garage", "Ride analytics & insights", "Season rewards & coins", "Priority support"], 
+    anchor: "Less than one coffee - every scenic route, ride stat, and season reward for $9.99/month.",
+    navNote: "Pro adds scenic and curvy routing that skips the boring highways.",
+    reassurance: "Start free. 30-day Pro trial, cancel anytime in your app store.",
+    cta: "Start Free Pro Trial",
+    features: ["Everything in Basic", "Scenic & curvy routes", "Unlimited cars and bikes in Garage", "Ride analytics & insights", "Season rewards & coins", "Priority support"], 
     popular: true 
   }
 ];
@@ -29,8 +37,9 @@ export default function PricingCards() {
         viewport={{ once: true }}
         style={{ textAlign: 'center', marginBottom: '4rem' }}
       >
-        <h4 style={{ color: '#888', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 600 }}>SIMPLE PRICING</h4>
+        <p style={{ color: '#888', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 600 }}>SIMPLE PRICING</p>
         <h2 style={{ fontSize: '3rem', color: 'var(--onyx)' }}>Choose your ride.</h2>
+        <p style={{ color: '#666', fontSize: '1rem', marginTop: '0.75rem' }}>Billing runs through the Apple App Store or Google Play, so you manage or cancel Pro right from your phone.</p>
       </motion.div>
       
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center', width: '100%', maxWidth: '1200px' }}>
@@ -68,6 +77,11 @@ export default function PricingCards() {
               <span style={{ fontSize: '3rem', fontWeight: 800, fontFamily: 'var(--font-axiforma)', color: tier.popular ? 'var(--coral-red)' : 'var(--onyx)' }}>{tier.price}</span>
               <span style={{ color: '#888', fontWeight: 500, fontSize: '0.9rem' }}>{tier.subtitle}</span>
             </div>
+
+            {tier.anchor && (
+              <p style={{ color: 'var(--onyx)', fontSize: '0.9rem', fontWeight: 600, margin: '-0.75rem 0 1rem 0', lineHeight: 1.4 }}>{tier.anchor}</p>
+            )}
+            <p style={{ color: '#666', fontSize: '0.85rem', margin: '0 0 1.25rem 0', lineHeight: 1.4, fontStyle: 'italic' }}>{tier.navNote}</p>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
               {tier.features.map((f, j) => (
@@ -78,20 +92,27 @@ export default function PricingCards() {
               ))}
             </ul>
             
-            <button 
+            <a 
+              href={getStoreUrl()}
               className={tier.popular ? "btn-primary" : "btn-secondary"} 
               style={{ 
                 marginTop: '1.5rem', 
                 padding: '0.8rem 1.5rem',
                 width: '100%', 
                 justifyContent: 'center',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                textAlign: 'center',
+                boxSizing: 'border-box',
                 background: tier.popular ? 'var(--coral-red)' : 'transparent',
                 borderColor: tier.popular ? 'transparent' : '#ddd',
                 color: tier.popular ? '#fff' : 'var(--onyx)'
               }}
             >
-              {tier.popular ? "Get Cruvo Pro" : "Get Started"}
-            </button>
+              {tier.cta}
+            </a>
+            <p style={{ textAlign: 'center', color: '#666', fontSize: '0.8rem', margin: '0.75rem 0 0 0', lineHeight: 1.4 }}>{tier.reassurance}</p>
           </motion.div>
         ))}
       </div>
