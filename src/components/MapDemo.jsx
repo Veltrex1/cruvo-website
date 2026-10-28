@@ -323,7 +323,7 @@ export default function MapDemo() {
                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: "#666", marginBottom: 4, display: "flex", justifyContent: "flex-end" }}>
                   <span style={{ color: 'var(--onyx)' }}>{(playT * 120).toFixed(1)} mi / 120 mi</span>
                 </div>
-                <input type="range" min="0" max="1" step="0.001" value={playT}
+                <input type="range" aria-label="Ride progress" min="0" max="1" step="0.001" value={playT}
                   onChange={(e) => { setPlayT(parseFloat(e.target.value)); }}
                   style={{ width: "100%", accentColor: "var(--coral-red)" }} />
               </div>

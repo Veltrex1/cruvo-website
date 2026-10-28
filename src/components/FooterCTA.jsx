@@ -263,6 +263,7 @@ export default function FooterCTA() {
               <form className="community-form" onSubmit={handleSubmit}>
                 <input 
                   type="email" 
+                  aria-label="Email address"
                   placeholder="Enter your email address" 
                   required 
                   className="community-input"

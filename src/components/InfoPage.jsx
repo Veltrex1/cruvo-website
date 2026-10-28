@@ -122,7 +122,8 @@ const styles = `
     margin: 0 0 14px;
     color: #4b5563;
     line-height: 1.75;
-    max-width: 760px;
+    max-width: 62ch;
+    text-wrap: pretty;
   }
 
   .info-grid {
@@ -150,7 +151,8 @@ const styles = `
     margin: 0;
     color: #667085;
     line-height: 1.62;
-    font-size: 0.98rem;
+    font-size: 1rem;
+    text-wrap: pretty;
   }
 
   .info-link {

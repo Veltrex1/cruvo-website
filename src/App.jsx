@@ -127,7 +127,7 @@ function App() {
             boxShadow: isScrolled ? "0 4px 12px rgba(0,0,0,0.5)" : "0 1px 0 rgba(255,255,255,.1) inset",
             transition: "all .25s ease",
           }}>
-            <a href="#top" className="nav-logo" style={{ display: 'flex', alignItems: 'center' }}>
+            <a href="#top" className="nav-logo" aria-label="Cruvo home" style={{ display: 'flex', alignItems: 'center' }}>
               {/* Using CSS Mask to perfectly colorize the official Fullstack SVG to Coral Red */}
               <div style={{
                 backgroundColor: 'var(--coral-red)',

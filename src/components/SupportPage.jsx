@@ -162,6 +162,7 @@ export default function SupportPage() {
         }
 
         .support-card-copy {
+          text-wrap: pretty;
           color: #667085;
           line-height: 1.65;
           margin: 0;
@@ -189,6 +190,7 @@ export default function SupportPage() {
         }
 
         .support-contact-row {
+          text-wrap: pretty;
           display: grid;
           grid-template-columns: 42px 1fr;
           gap: 14px;
@@ -262,6 +264,7 @@ export default function SupportPage() {
         }
 
         .support-topic-card p {
+          text-wrap: pretty;
           margin: 0;
           color: #667085;
           line-height: 1.62;
@@ -272,7 +275,8 @@ export default function SupportPage() {
           margin-top: 18px;
           color: #667085;
           line-height: 1.65;
-          max-width: 780px;
+          max-width: 60ch;
+          text-wrap: pretty;
         }
 
         .account-deletion-panel {
@@ -292,11 +296,14 @@ export default function SupportPage() {
           color: #667085;
           line-height: 1.7;
           margin: 0;
-          max-width: 700px;
+          max-width: 60ch;
+          text-wrap: pretty;
         }
 
         .account-deletion-steps {
           color: #4b5563;
+          max-width: 60ch;
+          text-wrap: pretty;
           line-height: 1.7;
           margin: 22px 0 0;
           padding-left: 22px;
@@ -322,6 +329,7 @@ export default function SupportPage() {
         }
 
         .account-deletion-action p {
+          text-wrap: pretty;
           color: #667085;
           line-height: 1.62;
           margin: 0 0 18px;
