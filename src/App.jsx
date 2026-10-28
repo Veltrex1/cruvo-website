@@ -58,7 +58,7 @@ function App() {
   });
 
   if (legalPolicy) {
-    return <LegalPage policy={legalPolicy} />;
+    return <LegalPage policy={legalPolicy} currentPath={currentPath} />;
   }
 
   if (currentPath === '/support') {

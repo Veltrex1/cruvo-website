@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Breadcrumbs, RelatedPages } from "./PageLinks";
 import { Mail, MapPin, Navigation, ShieldAlert, CreditCard, UserX, Route, LifeBuoy } from "lucide-react";
 
 const supportTopics = [
@@ -412,6 +413,8 @@ export default function SupportPage() {
         </div>
       </nav>
 
+      <Breadcrumbs current="Support" />
+
       <motion.header
         className="support-hero"
         initial={{ opacity: 0, y: 18 }}
@@ -517,6 +520,8 @@ export default function SupportPage() {
           </aside>
         </div>
       </section>
+
+      <RelatedPages currentPath="/support" />
 
       <footer className="support-footer">
         <span>&copy; {new Date().getFullYear()} Cruvo. All rights reserved.</span>

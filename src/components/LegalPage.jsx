@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Breadcrumbs, RelatedPages } from "./PageLinks";
 
 function renderLegalLine(line, index) {
   if (!line.trim()) {
@@ -24,7 +25,7 @@ function renderLegalLine(line, index) {
   return <p key={index}>{line}</p>;
 }
 
-export default function LegalPage({ policy }) {
+export default function LegalPage({ policy, currentPath }) {
   const lines = policy.content.split(/\r?\n/);
   const documentLines = lines;
 
@@ -310,11 +311,14 @@ export default function LegalPage({ policy }) {
           <a className="legal-nav-link" href="/">
             Home
           </a>
+          <a className="legal-nav-link" href="/support">Support</a>
           <a className="legal-nav-link" href="/eula">EULA</a>
           <a className="legal-nav-link" href="/terms">Terms</a>
           <a className="legal-nav-link" href="/privacy-policy">Privacy</a>
         </div>
       </nav>
+
+      <Breadcrumbs current={policy.title} />
 
       <motion.header
         className="legal-hero"
@@ -347,6 +351,8 @@ export default function LegalPage({ policy }) {
           {documentLines.map(renderLegalLine)}
         </motion.article>
       </div>
+
+      <RelatedPages currentPath={currentPath} />
 
       <footer className="legal-footer">
         <span>&copy; {new Date().getFullYear()} Cruvo. All rights reserved.</span>
