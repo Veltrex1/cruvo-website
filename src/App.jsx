@@ -3,7 +3,7 @@ import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-
 import Hero from './components/Hero';
 import FeaturesGrid from './components/FeaturesGrid';
 import AppShowcase from './components/AppShowcase';
-import MapDemo from './components/MapDemo';
+import LiveRideSection from './components/live-ride/LiveRideSection';
 import PricingCards from './components/PricingCards';
 import FooterCTA from './components/FooterCTA';
 import Preloader from './components/Preloader';
@@ -241,7 +241,7 @@ function App() {
           <Hero />
           <FeaturesGrid />
           <AppShowcase />
-          <MapDemo />
+          <LiveRideSection />
           <PricingCards />
           <FooterCTA />
         </div>
