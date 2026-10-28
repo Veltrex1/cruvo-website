@@ -2,6 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
+import { analytics } from '@heycatch/sdk';
+
+analytics.init({
+  projectKey: 'hck_pk_B4AeyLvZUGS9UINnUZwkRYR5uhfyeV0I',
+  site: 'landing',
+  install: {
+    framework: 'vite-react',
+    frameworkVersion: '19',
+    agent: 'claude-code',
+  },
+});
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
