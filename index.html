@@ -14,17 +14,21 @@
     <meta property="og:type" content="website" />
   </head>
   <body>
-    <!-- Crawlable links for clients that do not run JavaScript; React replaces this on mount. -->
+    <!-- Served before JavaScript runs (and to crawlers that do not run it): the page headline and site links. React replaces it on mount. -->
     <div id="root">
-      <nav aria-label="Site pages" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/clubs">Cruvo for Clubs</a>
-        <a href="/support">Support</a>
-        <a href="/privacy-policy">Privacy Policy</a>
-        <a href="/terms">Terms and Conditions</a>
-        <a href="/eula">Terms of Use (EULA)</a>
-      </nav>
+      <main style="min-height:100vh;box-sizing:border-box;padding:48px 16px;background:#f8f8f8;color:#161618;font-family:system-ui,sans-serif;line-height:1.6">
+        <h1 style="margin:0 0 12px;font-size:2rem;line-height:1.15">Ride together. Stay together. Remember the ride.</h1>
+        <p style="margin:0 0 20px;max-width:60ch">Cruvo is your all-in-one motorcycle app for group rides, live navigation, crew updates, and the community that rides with you.</p>
+        <nav aria-label="Site pages">
+          <a href="/">Home</a> ·
+          <a href="/about">About</a> ·
+          <a href="/clubs">Cruvo for Clubs</a> ·
+          <a href="/support">Support</a> ·
+          <a href="/privacy-policy">Privacy Policy</a> ·
+          <a href="/terms">Terms and Conditions</a> ·
+          <a href="/eula">Terms of Use (EULA)</a>
+        </nav>
+      </main>
     </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
