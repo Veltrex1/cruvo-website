@@ -95,6 +95,10 @@ export default function PricingCards() {
           </motion.div>
         ))}
       </div>
+      <p style={{ marginTop: '2rem', textAlign: 'center', color: '#555', fontSize: '0.95rem' }}>
+        Questions about subscriptions or billing?{' '}
+        <a href="/support" style={{ color: 'var(--onyx)', fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: '3px' }}>Get help from Cruvo support</a>.
+      </p>
     </section>
   );
 }

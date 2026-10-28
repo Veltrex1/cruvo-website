@@ -593,6 +593,32 @@
   color: rgba(248, 248, 248, 0.66);
 }
 
+.lr-more {
+  margin: 10px auto 0;
+  max-width: 62ch;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(248, 248, 248, 0.66);
+}
+
+.lr-more a {
+  color: var(--snowdrift);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lr-more a:hover {
+  color: var(--coral-red);
+}
+
+.lr-more a:focus-visible {
+  outline: 2px solid var(--snowdrift);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .lr-sr-only {
   position: absolute;
   width: 1px;

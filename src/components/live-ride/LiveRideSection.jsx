@@ -55,6 +55,10 @@ export default function LiveRideSection() {
         </div>
 
         <p className="lr-caption">A shared route. A clear meeting point. Everyone in the loop.</p>
+        <p className="lr-more">
+          Run a club? <a href="/clubs">See how Cruvo supports motorcycle and car clubs</a>. Driving instead of riding?{' '}
+          <a href="/about">Read how Cruvo is expanding from motorcycles to cars</a>.
+        </p>
         <p className="lr-sr-only" role="status" aria-live="polite">{state.announcement}</p>
       </div>
     </section>
