@@ -29,7 +29,6 @@ const HEADINGS = {
   '/contact': 'Contact Cruvo',
   '/pricing': 'Your crew rides free.',
   '/cruvo-vs-scenic': 'Cruvo vs Scenic',
-  '/cruvo-vs-rever': 'Cruvo vs Rever',
 };
 export const CARDS = [
   {

@@ -49,7 +49,7 @@ test('home lists both plans and its FAQ', () => {
 });
 
 test('comparison pages carry an FAQPage', () => {
-  for (const path of ['/cruvo-vs-scenic', '/cruvo-vs-rever']) {
+  for (const path of ['/cruvo-vs-scenic']) {
     assert.ok(byType(pageStructuredData(path), 'FAQPage'), path);
   }
 });

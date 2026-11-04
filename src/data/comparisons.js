@@ -24,24 +24,4 @@ export const COMPARISONS = {
       { q: 'Is Cruvo free?', a: 'The Rider plan is free forever with no credit card. Captain (Cruvo Pro) is $9.99 a month after a 30-day free trial, billed through the App Store or Google Play.' },
     ],
   },
-  '/cruvo-vs-rever': {
-    rival: 'Rever',
-    reviewed: '2026-11-04',
-    heading: 'Cruvo vs Rever: which app keeps your crew together?',
-    intro: 'Rever is a long-running motorcycle app for tracking rides, finding routes, and sharing them with a large rider community. Cruvo focuses on the ride itself when you are out with a group: one route, everyone on a live map, and a clear place to regroup. Here is how they compare.',
-    rows: [
-      ['Built around', 'Group rides and drives: one shared route, the whole crew on a live map, regroup points.', 'Ride tracking, route discovery, and a large motorcycle community.'],
-      ['Group coordination', 'Live crew map, rider roster, and regroup points the whole group sees.', 'Check Rever’s current listing for its group ride and live tracking features.'],
-      ['Navigation', 'Turn-by-turn navigation; Captain adds scenic and curvy routing.', 'Navigation and route planning, with more features on its paid tier.'],
-      ['Cars and motorcycles', 'Both. Plan rides and drives, and keep bikes and cars in one garage.', 'Built for motorcycles.'],
-      ['Pricing', CRUVO_PRICE, 'Free to download with a paid tier; see Rever’s store listing for current pricing.'],
-    ],
-    pickCruvo: 'Your rides are group rides, you lead a club, or your crew includes drivers as well as riders.',
-    pickRival: 'You want to log solo rides and browse a big library of community routes.',
-    faq: [
-      { q: 'Is Cruvo a Rever alternative?', a: 'Yes, especially for group rides. Cruvo is built around keeping a crew together on one live map with shared regroup points, and it supports cars as well as motorcycles.' },
-      { q: 'Can I use Cruvo for a club ride?', a: 'Yes. Ride captains plan the route, invite the crew, and everyone sees each other and the regroup point live. See the Cruvo for Clubs page for more.' },
-      { q: 'Is Cruvo free?', a: 'The Rider plan is free forever with no credit card. Captain (Cruvo Pro) is $9.99 a month after a 30-day free trial, billed through the App Store or Google Play.' },
-    ],
-  },
 };

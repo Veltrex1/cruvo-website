@@ -3,7 +3,7 @@ import AppStoreBadgeLink from './AppStoreBadgeLink';
 import GooglePlayBadgeLink from './GooglePlayBadgeLink';
 
 const FOOTER_COLUMNS = [
-  { title: 'Product', links: [['Features', '#features'], ['How it works', '#how'], ['Pricing', '/pricing'], ['FAQ', '#faq'], ['Cruvo vs Scenic', '/cruvo-vs-scenic'], ['Cruvo vs Rever', '/cruvo-vs-rever']] },
+  { title: 'Product', links: [['Features', '#features'], ['How it works', '#how'], ['Pricing', '/pricing'], ['FAQ', '#faq'], ['Cruvo vs Scenic', '/cruvo-vs-scenic']] },
   { title: 'Company', links: [['About Cruvo', '/about'], ['Community and clubs', '/clubs'], ['Support', '/support'], ['Contact', '/contact'], ['Email us', 'mailto:hello@veltrex.ai']] },
   { title: 'Legal', links: [['Privacy Policy', '/privacy-policy'], ['Terms and Conditions', '/terms'], ['Terms of Use (EULA)', '/eula']] },
 ];

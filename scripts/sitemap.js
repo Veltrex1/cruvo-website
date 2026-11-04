@@ -30,7 +30,6 @@ export const PAGES = [
   { path: '/clubs', sources: ['src/components/ClubsPage.jsx', 'src/components/InfoPage.jsx', 'api/club-inquiry.js'] },
   { path: '/pricing', sources: ['src/components/PricingPage.jsx', 'src/components/PricingCards.jsx', 'src/components/InfoPage.jsx', 'src/data/faq.js'] },
   { path: '/cruvo-vs-scenic', sources: COMPARE_SOURCES },
-  { path: '/cruvo-vs-rever', sources: COMPARE_SOURCES },
   { path: '/contact', sources: ['src/components/ContactPage.jsx', 'src/components/InfoPage.jsx', 'src/data/company.js'] },
   { path: '/support', sources: ['src/components/SupportPage.jsx'] },
   { path: '/privacy-policy', sources: [...LEGAL_SOURCES, 'src/data/legalPolicies.js'] },
