@@ -27,12 +27,15 @@ const HEADINGS = {
   '/about': 'Built for the ride. Now for the drive too.',
   '/clubs': 'Run a club? Ride and drive together.',
   '/contact': 'Contact Cruvo',
+  '/pricing': 'Your crew rides free.',
+  '/cruvo-vs-scenic': 'Cruvo vs Scenic',
+  '/cruvo-vs-rever': 'Cruvo vs Rever',
 };
 export const CARDS = [
   {
     slug: 'home',
     heading: 'Ride together. Stay together. <em>Remember the ride.</em>',
-    line: 'Your all-in-one motorcycle app for group rides, live navigation, crew updates, and the community that rides with you.',
+    line: 'Your all-in-one car and motorcycle app for group rides and drives, live navigation, crew updates, and the community that rides with you.',
   },
   ...SITE_PAGES.map((p) => ({ slug: p.path.slice(1), heading: HEADINGS[p.path], line: p.blurb })),
 ];

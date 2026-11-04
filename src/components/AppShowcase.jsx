@@ -1,248 +1,204 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion';
 import PhoneMockup from './PhoneMockup';
 
 const screens = [
   {
-    title: "Plan the perfect ride",
-    desc: "Map out your route, set checkpoints, and invite your crew in seconds. Everything is organized before you even kick up the stand.",
-    placeholderLabel: "Replace with: Plan/Garage Screen (Portrait PNG)",
+    title: "Plan a rideout",
+    desc: "Map out your route, set checkpoints, and invite your crew in seconds. Everything is organized before you kick up the stand or start the engine.",
     highlight: "01",
-    image: "/ride-setup.png"
+    image: "/ride-setup.png",
+    alt: "Cruvo ride setup screen for planning a group rideout with checkpoints",
   },
   {
-    title: "Navigate with confidence",
-    desc: "Turn-by-turn navigation tailored for riders. Find the curviest roads and avoid the boring highways.",
-    placeholderLabel: "Replace with: Live Navigation Screen (Portrait PNG)",
+    title: "Turn-by-turn navigation",
+    desc: "Live turn-by-turn navigation tailored for riders and drivers. Find the curviest roads and skip the boring highways.",
     highlight: "02",
-    image: "/nwc1.png"
+    image: "/nwc1.png",
+    alt: "Cruvo turn-by-turn navigation screen on a curvy road",
   },
   {
     title: "Regroup & check-in",
-    desc: "Never lose a rider. Real-time location sharing and automatic check-ins at regroup points keep the pack tight.",
-    placeholderLabel: "Replace with: Regroup / Dark Theme Screen (Portrait PNG)",
+    desc: "Never lose anyone. Real-time location sharing and check-ins at regroup points keep the pack tight.",
     highlight: "03",
-    image: "/regroup.png"
+    image: "/regroup.png",
+    alt: "Cruvo regroup screen showing the crew heading to a meeting point",
   },
   {
     title: "Relive the journey",
-    desc: "Your routes, top speeds, and photos are saved automatically. Brag about your stats and share the memories.",
-    placeholderLabel: "Replace with: Post-Ride Stats Screen (Portrait PNG)",
+    desc: "Your routes, top speeds, and photos are saved automatically. Share the stats and the memories.",
     highlight: "04",
-    image: "/share.png"
-  }
+    image: "/share.png",
+    alt: "Cruvo post-ride summary with route, stats and photos",
+  },
 ];
+
+const AUTO_ADVANCE_MS = 5000;
 
 export default function AppShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const containerRef = useRef(null);
+  const [paused, setPaused] = useState(false);
+  const sectionRef = useRef(null);
+  const tabRefs = useRef([]);
+  const inView = useInView(sectionRef, { amount: 0.4 });
+  const reduceMotion = useReducedMotion();
 
-  // Track the scroll progress through the 400vh tall container
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Map scroll progress 0-1 smoothly to index 0-3
-    const newIndex = Math.min(screens.length - 1, Math.floor(latest * screens.length));
-    if (newIndex !== activeIndex) {
-      setActiveIndex(newIndex);
-    }
-  });
-
+  // Gently cycle through the steps while the section is on screen, until the visitor picks one.
   useEffect(() => {
-    if (window.innerWidth <= 1024) {
-      const el = document.getElementById(`showcase-tab-${activeIndex}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }
-  }, [activeIndex]);
+    if (!inView || paused || reduceMotion) return undefined;
+    const id = window.setTimeout(() => setActiveIndex((i) => (i + 1) % screens.length), AUTO_ADVANCE_MS);
+    return () => window.clearTimeout(id);
+  }, [activeIndex, inView, paused, reduceMotion]);
+
+  const select = (index) => {
+    setPaused(true);
+    setActiveIndex(index);
+  };
+
+  const onKeyDown = (event) => {
+    const keys = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+    if (!(event.key in keys)) return;
+    event.preventDefault();
+    const next = (activeIndex + keys[event.key] + screens.length) % screens.length;
+    select(next);
+    tabRefs.current[next]?.focus();
+  };
 
   return (
-    // The container is 400vh tall to allow scrolling space. 
-    // We explicitly use display: block to override the App.css flexbox which was centering the sticky child!
-    <section ref={containerRef} id="how" style={{ background: 'var(--snowdrift)', position: 'relative', height: `${screens.length * 100}vh`, padding: 0, display: 'block' }}>
-
+    <section ref={sectionRef} id="how" className="showcase-section">
       <style>{`
+        .showcase-section {
+          background: var(--snowdrift);
+          min-height: 0;
+          padding: 6rem 2rem;
+        }
         .app-showcase-wrapper {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 4rem;
-          padding: 0 2rem;
           width: 100%;
-          max-width: 1400px;
+          max-width: 1200px;
           margin: 0 auto;
         }
-        .app-showcase-left {
-          flex: 1;
-          padding-right: 2rem;
-        }
+        .app-showcase-left { flex: 1; min-width: 0; }
         .app-showcase-right {
-          flex: 1;
+          flex: 0 0 auto;
+          height: 600px;
           display: flex;
+          align-items: center;
           justify-content: center;
         }
+        .showcase-phone { transform: scale(0.9); }
         .tabs-container {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
         }
         .tab-item {
+          position: relative;
+          width: 100%;
+          text-align: left;
+          font: inherit;
           padding: 1.2rem 1.5rem;
           border-radius: 20px;
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
+          border: 1px solid transparent;
+          background: transparent;
           cursor: pointer;
-          }
-          .tab-title {
-            font-size: 1.3rem;
-          }
-          .tab-desc {
-            font-size: 0.95rem;
-          }
-          .showcase-h2 {
-            font-size: 3rem;
-          }
-          @media (max-width: 1024px) {
-            .app-showcase-wrapper {
-              flex-direction: column;
-              justify-content: flex-start;
-              gap: 1rem;
-              padding-top: 1rem;
-              padding-bottom: 1rem;
-              height: 100vh;
-            }
-            .app-showcase-left {
-              padding-right: 0;
-              width: 100%;
-            }
-            .tabs-container {
-              flex-direction: row;
-              overflow-x: auto;
-              scroll-snap-type: x mandatory;
-              padding-bottom: 0.5rem;
-              gap: 1rem;
-            }
-            .tab-item {
-              min-width: 80vw;
-              scroll-snap-align: center;
-              padding: 0.8rem 1rem !important;
-            }
-            .tab-title {
-              font-size: 1rem !important;
-            }
-            .tab-desc {
-              font-size: 0.8rem !important;
-              line-height: 1.3 !important;
-            }
-            .showcase-h2 {
-              font-size: 1.8rem !important;
-            }
-            .app-showcase-right {
-              transform: scale(0.7);
-              transform-origin: top center;
-            }
-          }
-          @media (max-width: 768px) {
-            .app-showcase-right {
-              transform: scale(0.6);
-            }
-          }
+          overflow: hidden;
+          transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .tab-item[aria-selected="true"] {
+          background: #fff;
+          border-color: rgba(0,0,0,0.05);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+        .tab-item:focus-visible { outline: 2px solid var(--coral-red); outline-offset: 2px; }
+        .tab-body { display: flex; align-items: flex-start; gap: 1rem; opacity: 0.45; transition: opacity 0.3s ease; }
+        .tab-item[aria-selected="true"] .tab-body, .tab-item:hover .tab-body { opacity: 1; }
+        .tab-title { display: block; font-size: 1.3rem; font-weight: 700; color: var(--onyx); margin: 0 0 0.3rem; }
+        .tab-desc { display: block; font-size: 0.95rem; color: #666; line-height: 1.5; margin: 0; }
+        .showcase-h2 { font-size: 3rem; color: var(--onyx); line-height: 1.1; }
+        @media (max-width: 900px) {
+          .showcase-section { padding: 4rem 1rem; }
+          .app-showcase-wrapper { flex-direction: column; gap: 1rem; }
+          .app-showcase-left { width: 100%; }
+          .showcase-h2 { font-size: 2rem; }
+          .tab-item { padding: 0.9rem 1rem; }
+          .tab-title { font-size: 1.05rem; }
+          .tab-desc { font-size: 0.85rem; }
+          .app-showcase-right { height: 470px; }
+          .showcase-phone { transform: scale(0.7); }
+        }
       `}</style>
 
-      {/* Sticky Container locks perfectly to viewport. Added paddingTop to clear the fixed navbar. */}
-      <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', paddingTop: '80px' }}>
+      <div className="app-showcase-wrapper">
+        <div className="app-showcase-left">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ marginBottom: '2rem' }}
+          >
+            <h4 style={{ color: 'var(--coral-red)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 800 }}>How it works</h4>
+            <h2 className="showcase-h2">From plan to regroup in four steps.</h2>
+          </motion.div>
 
-        <div className="app-showcase-wrapper">
-
-          {/* Left Side: Compact Interactive Tabs UI */}
-          <div className="app-showcase-left">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              style={{ marginBottom: '2rem' }}
-            >
-              <h4 style={{ color: 'var(--coral-red)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 800 }}>Seamless Experience</h4>
-              <h2 className="showcase-h2" style={{ color: 'var(--onyx)', lineHeight: 1.1 }}>Designed for the ride.</h2>
-            </motion.div>
-
-            <div className="tabs-container">
-              {screens.map((screen, index) => {
-                const isActive = index === activeIndex;
-                return (
-                  <div
-                    key={index}
-                    id={`showcase-tab-${index}`}
-                    className="tab-item"
-                    style={{
-                      background: isActive ? '#fff' : 'transparent',
-                      border: isActive ? '1px solid rgba(0,0,0,0.05)' : '1px solid transparent',
-                      boxShadow: isActive ? '0 20px 40px rgba(0,0,0,0.05)' : 'none',
-                    }}
-                    onClick={() => {
-                      // Allow manual click overriding (optional interaction)
-                      // A full implementation would scroll the window to the correct section height
-                      window.scrollTo({
-                        top: containerRef.current.offsetTop + (index * window.innerHeight),
-                        behavior: 'smooth'
-                      });
-                    }}
-                  >
-                    {/* Active Indicator Line */}
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeTabIndicator"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: '4px', background: 'var(--coral-red)', borderRadius: '0 4px 4px 0' }}
-                      />
-                    )}
-
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', opacity: isActive ? 1 : 0.4, transition: 'opacity 0.3s ease' }}>
-                      <span style={{ color: 'var(--coral-red)', fontWeight: 800, fontSize: '1rem', marginTop: '3px' }}>{screen.highlight}</span>
-                      <div>
-                        <h3 className="tab-title" style={{ color: 'var(--onyx)', marginBottom: '0.3rem' }}>{screen.title}</h3>
-                        <p className="tab-desc" style={{ color: '#666', lineHeight: 1.5, margin: 0 }}>{screen.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          <div className="tabs-container" role="tablist" aria-label="How Cruvo works" aria-orientation="vertical" onKeyDown={onKeyDown}>
+            {screens.map((screen, index) => {
+              const isActive = index === activeIndex;
+              return (
+                <button
+                  key={screen.highlight}
+                  ref={(el) => { tabRefs.current[index] = el; }}
+                  type="button"
+                  role="tab"
+                  id={`showcase-tab-${index}`}
+                  aria-selected={isActive}
+                  aria-controls="showcase-panel"
+                  tabIndex={isActive ? 0 : -1}
+                  className="tab-item"
+                  onClick={() => select(index)}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeTabIndicator"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: '4px', background: 'var(--coral-red)', borderRadius: '0 4px 4px 0' }}
+                    />
+                  )}
+                  <span className="tab-body">
+                    <span style={{ color: 'var(--coral-red)', fontWeight: 800, fontSize: '1rem', marginTop: '3px' }}>{screen.highlight}</span>
+                    <span>
+                      <span className="tab-title">{screen.title}</span>
+                      <span className="tab-desc">{screen.desc}</span>
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Right Side: Phone with Cross-fading Screens */}
-          <div className="app-showcase-right">
-            <PhoneMockup style={{ transform: 'scale(0.9)', boxShadow: '0 30px 60px rgba(0,0,0,0.1)', transformOrigin: 'center center' }}>
+        <div className="app-showcase-right" id="showcase-panel" role="tabpanel" aria-labelledby={`showcase-tab-${activeIndex}`}>
+          <div className="showcase-phone">
+            <PhoneMockup style={{ boxShadow: '0 30px 60px rgba(0,0,0,0.1)' }}>
               <div style={{ width: '100%', height: '100%', background: '#fff', position: 'relative', overflow: 'hidden' }}>
                 <AnimatePresence mode="wait">
-                  <motion.div
+                  <motion.img
                     key={activeIndex}
+                    src={screens[activeIndex].image}
+                    alt={screens[activeIndex].alt}
                     initial={{ opacity: 0, scale: 1.05 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.3 }}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                  >
-                    <img
-                      src={screens[activeIndex].image}
-                      alt={screens[activeIndex].title}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover' // ensures no stretching, fills the phone screen
-                      }}
-                    />
-                  </motion.div>
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
                 </AnimatePresence>
               </div>
             </PhoneMockup>
           </div>
-
         </div>
       </div>
     </section>

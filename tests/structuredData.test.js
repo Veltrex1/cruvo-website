@@ -40,3 +40,16 @@ test('the script tag cannot be broken out of', () => {
   assert.equal(tag.match(/<\/script>/g).length, 1);
   assert.ok(JSON.parse(tag.slice(tag.indexOf('>') + 1, tag.lastIndexOf('<'))));
 });
+
+test('home lists both plans and its FAQ', () => {
+  const data = homeStructuredData({ title: 't', description: 'd' });
+  const prices = byType(data, 'MobileApplication').offers.map((o) => o.price);
+  assert.deepEqual(prices, ['0', '9.99']);
+  assert.ok(byType(data, 'FAQPage').mainEntity.length >= 4);
+});
+
+test('comparison pages carry an FAQPage', () => {
+  for (const path of ['/cruvo-vs-scenic', '/cruvo-vs-rever']) {
+    assert.ok(byType(pageStructuredData(path), 'FAQPage'), path);
+  }
+});

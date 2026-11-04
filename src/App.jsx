@@ -13,13 +13,27 @@ import ShareLandingPage from './components/ShareLandingPage';
 import AboutPage from './components/AboutPage';
 import ClubsPage from './components/ClubsPage';
 import ContactPage from './components/ContactPage';
+import PricingPage from './components/PricingPage';
+import ComparePage from './components/ComparePage';
+import Testimonials from './components/Testimonials';
+import TrustStrip from './components/TrustStrip';
+import HomeFAQ from './components/HomeFAQ';
+import FounderBlock from './components/FounderBlock';
+import { COMPARISONS } from './data/comparisons';
 import AppStoreBadgeLink from './components/AppStoreBadgeLink';
 import GooglePlayBadgeLink from './components/GooglePlayBadgeLink';
 import { eula, privacyPolicy, termsAndConditions } from './data/legalPolicies';
 import { getShareRoute } from './share-routes';
 import './App.css';
 
-const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support', '/about', '/clubs', '/contact'];
+const KNOWN_ROUTES = ['/', '/privacy-policy', '/terms', '/eula', '/support', '/about', '/clubs', '/contact', '/pricing', ...Object.keys(COMPARISONS)];
+const NAV_LINKS = [
+  { label: "Features", href: "#features" },
+  { label: "How it works", href: "#how" },
+  { label: "Pricing", href: "/pricing", page: true },
+  { label: "About", href: "/about", page: true },
+  { label: "Clubs", href: "/clubs", page: true },
+];
 const SITE_ORIGIN = 'https://www.cruvo.co';
 
 function App() {
@@ -78,6 +92,14 @@ function App() {
 
   if (currentPath === '/contact') {
     return <ContactPage />;
+  }
+
+  if (currentPath === '/pricing') {
+    return <PricingPage />;
+  }
+
+  if (COMPARISONS[currentPath]) {
+    return <ComparePage path={currentPath} />;
   }
 
   if (shareRoute) {
@@ -149,13 +171,7 @@ function App() {
               listStyle: "none", margin: 0, padding: 0,
               justifyContent: "center", gap: 30,
             }}>
-              {[
-                { label: "Features", href: "#features" },
-                { label: "How it works", href: "#how" },
-                { label: "Pricing", href: "#pricing" },
-                { label: "About", href: "/about", page: true },
-                { label: "Clubs", href: "/clubs", page: true }
-              ].map(i => (
+              {NAV_LINKS.map(i => (
                 <li key={i.label}>
                   <a href={i.href}
                     onClick={(e) => {
@@ -189,6 +205,8 @@ function App() {
               {/* Hamburger Button (Mobile Only) */}
               <button 
                 className="mobile-menu-btn"
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMobileMenuOpen}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 style={{ background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
@@ -218,13 +236,7 @@ function App() {
                 display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center'
               }}
             >
-              {[
-                { label: "Features", href: "#features" },
-                { label: "How it works", href: "#how" },
-                { label: "Pricing", href: "#pricing" },
-                { label: "About", href: "/about", page: true },
-                { label: "Clubs", href: "/clubs", page: true }
-              ].map(i => (
+              {NAV_LINKS.map(i => (
                 <a key={i.label} href={i.href}
                   onClick={(e) => {
                     if (i.page) return;
@@ -232,7 +244,7 @@ function App() {
                     setIsMobileMenuOpen(false);
                     document.querySelector(i.href)?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', textDecoration: 'none' }}
+                  style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', textDecoration: 'none', padding: '10px 16px', minHeight: 44, display: 'inline-flex', alignItems: 'center' }}
                 >
                   {i.label}
                 </a>
@@ -245,9 +257,13 @@ function App() {
         <div style={{ position: 'relative', zIndex: 10 }}>
           <Hero />
           <FeaturesGrid />
-          <AppShowcase />
           <LiveRideSection />
+          <AppShowcase />
+          <Testimonials />
+          <TrustStrip />
           <PricingCards />
+          <HomeFAQ />
+          <FounderBlock />
           <FooterCTA />
         </div>
       </div>

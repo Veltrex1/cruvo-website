@@ -92,9 +92,9 @@ export default function FeaturesGrid() {
     <section id="features" style={{ background: 'var(--snowdrift)', padding: '8rem 2rem', position: 'relative' }}>
 
       <SectionHeader
-        eyebrow="Everything a rider needs"
+        eyebrow="Everything your crew needs"
         title={<>One app.<br /><span style={{ color: "var(--coral-red)" }}>Every mile.</span></>}
-        sub="Plan, track, and share your rides all in one place. Built specifically for riders who care about the journey."
+        sub="Plan, track, and share every group ride and drive in one place. Built for riders and drivers who care about the journey."
       />
 
       <style>{`
@@ -219,16 +219,16 @@ export default function FeaturesGrid() {
         {/* 2 - Group Rides (Span 1) */}
         <TrueBentoCard 
           accent="coral" delay={0.2}
-          tag="GROUP RIDES" title="Group Rides"
-          text="Plan, create and join rides instantly."
+          tag="GROUP RIDES & DRIVES" title="Plan a Rideout"
+          text="Plan a rideout or group drive, invite your crew, and join in one tap."
           imgSrc="/gp1.png" 
         />
 
         {/* 3 - Live Navigation (Span 1) */}
         <TrueBentoCard 
           accent="teal" delay={0.3}
-          tag="NAVIGATION" title="Live Navigation"
-          text="Turn-by-turn routing built specifically to find curviest roads."
+          tag="NAVIGATION" title="Turn-by-Turn Navigation"
+          text="Live turn-by-turn navigation that finds the curviest roads, on two wheels or four."
           imgSrc="/live-navigation.png" 
         />
 
@@ -236,7 +236,7 @@ export default function FeaturesGrid() {
         <TrueBentoCard 
           accent="slate" delay={0.4}
           tag="COMMUNITY" title="Community"
-          text="Share routes and stunning photos with fellow riders."
+          text="Share routes and photos with riders and drivers who love the same roads."
           imgSrc="/Welcome1.png" 
         />
 
@@ -260,7 +260,7 @@ export default function FeaturesGrid() {
         <TrueBentoCard 
           accent="onyx" span2={true} delay={0.7}
           tag="GARAGE" title="Your Garage"
-          text="Track maintenance and perfectly monitor your Bike Performance Index to keep your ride in top shape."
+          text="Keep your bikes and cars in one garage. Track maintenance and your Performance Index to keep every ride in top shape."
           imgSrc="/Start1.png"
         />
 

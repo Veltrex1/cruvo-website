@@ -2,6 +2,12 @@ import { useState } from 'react';
 import AppStoreBadgeLink from './AppStoreBadgeLink';
 import GooglePlayBadgeLink from './GooglePlayBadgeLink';
 
+const FOOTER_COLUMNS = [
+  { title: 'Product', links: [['Features', '#features'], ['How it works', '#how'], ['Pricing', '/pricing'], ['FAQ', '#faq'], ['Cruvo vs Scenic', '/cruvo-vs-scenic'], ['Cruvo vs Rever', '/cruvo-vs-rever']] },
+  { title: 'Company', links: [['About Cruvo', '/about'], ['Community and clubs', '/clubs'], ['Support', '/support'], ['Contact', '/contact'], ['Email us', 'mailto:hello@veltrex.ai']] },
+  { title: 'Legal', links: [['Privacy Policy', '/privacy-policy'], ['Terms and Conditions', '/terms'], ['Terms of Use (EULA)', '/eula']] },
+];
+
 export default function FooterCTA() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle');
@@ -150,6 +156,10 @@ export default function FooterCTA() {
         .footer-brand {
           flex: 1 1 300px;
         }
+        .footer-col { display: flex; flex-direction: column; gap: 0.8rem; }
+        .footer-col-title { margin-bottom: 0.5rem; color: var(--onyx); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .footer-link { color: #666; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; padding: 2px 0; }
+        .footer-link:hover { color: var(--coral-red); }
         .footer-bottom {
           max-width: 1400px;
           margin: 0 auto;
@@ -356,28 +366,19 @@ export default function FooterCTA() {
               WebkitMaskPosition: 'center',
             }} title="Cruvo Logo" className="footer-logo-mask" />
             <p style={{ color: '#666', fontSize: '0.95rem', maxWidth: '250px', lineHeight: 1.6 }}>
-              The ultimate toolkit and community for the modern rider.
+              The group ride and drive app for motorcycles, cars, and the crews who ride them.
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: '4rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-              <h4 style={{ marginBottom: '0.5rem', color: 'var(--onyx)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Product</h4>
-              <a href="#features" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Features</a>
-              <a href="#how" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>How it works</a>
-              <a href="#pricing" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Pricing</a>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-              <h4 style={{ marginBottom: '0.5rem', color: 'var(--onyx)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Legal</h4>
-              <a href="/about" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>About Cruvo</a>
-              <a href="/clubs" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Cruvo for Clubs</a>
-              <a href="/support" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Support</a>
-              <a href="/contact" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Contact</a>
-              <a href="mailto:hello@veltrex.ai" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Email us</a>
-              <a href="/privacy-policy" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Privacy Policy</a>
-              <a href="/terms" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Terms and Conditions</a>
-              <a href="/eula" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}>Terms of Use (EULA)</a>
-            </div>
+            {FOOTER_COLUMNS.map((col) => (
+              <div key={col.title} className="footer-col">
+                <h4 className="footer-col-title">{col.title}</h4>
+                {col.links.map(([label, href]) => (
+                  <a key={href} href={href} className="footer-link">{label}</a>
+                ))}
+              </div>
+            ))}
           </div>
 
         </div>

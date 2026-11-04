@@ -5,6 +5,8 @@ import { SITE_ORIGIN, SITE_PAGES } from '../src/data/sitePages.js';
 import { privacyPolicy, termsAndConditions, eula } from '../src/data/legalPolicies.js';
 import { PAGES as SITEMAP_PAGES, pageLastmod } from './sitemap.js';
 import { COMPANY } from '../src/data/company.js';
+import { HOME_FAQ } from '../src/data/faq.js';
+import { COMPARISONS } from '../src/data/comparisons.js';
 
 const APP_STORE = 'https://apps.apple.com/us/app/cruvo/id6774693070';
 const GOOGLE_PLAY = 'https://play.google.com/store/apps/details?id=com.veltrex1.cruvo';
@@ -88,10 +90,31 @@ export function homeStructuredData({ title, description }) {
     operatingSystem: 'iOS, Android',
     applicationCategory: 'TravelApplication',
     installUrl: [APP_STORE, GOOGLE_PLAY],
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Basic plan: free' },
+    image: `${SITE_ORIGIN}/og/home.png`,
+    offers: [
+      { '@type': 'Offer', name: 'Rider (Cruvo Basic)', price: '0', priceCurrency: 'USD', description: 'Free forever: group rides and drives, live crew location, turn-by-turn navigation, one garage vehicle.' },
+      {
+        '@type': 'Offer',
+        name: 'Captain (Cruvo Pro)',
+        price: '9.99',
+        priceCurrency: 'USD',
+        description: 'Scenic and curvy routing, unlimited garage, ride analytics, season rewards and priority support. 30-day free trial.',
+        priceSpecification: { '@type': 'UnitPriceSpecification', price: '9.99', priceCurrency: 'USD', billingDuration: 'P1M', unitCode: 'MON' },
+      },
+    ],
     publisher: { '@id': ORG_ID },
   };
-  return graph(organization, website, page, app);
+  return graph(organization, website, page, app, faqPage(`${SITE_ORIGIN}/`, HOME_FAQ));
+}
+
+/** FAQPage node for a page's visible question-and-answer list. */
+function faqPage(url, items) {
+  return {
+    '@type': 'FAQPage',
+    '@id': `${url}#faq`,
+    url,
+    mainEntity: items.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  };
 }
 
 /** JSON-LD for one inner page, from its entry in SITE_PAGES. */
@@ -105,7 +128,9 @@ export function pageStructuredData(path) {
       { '@type': 'ListItem', position: 2, name: p.title, item: url },
     ],
   };
-  return graph(organization, website, { ...webPage({ path, title: p.seoTitle, description: p.description }), breadcrumb: breadcrumbs }, breadcrumbs);
+  const nodes = [organization, website, { ...webPage({ path, title: p.seoTitle, description: p.description }), breadcrumb: breadcrumbs }, breadcrumbs];
+  if (COMPARISONS[path]) nodes.push(faqPage(url, COMPARISONS[path].faq));
+  return graph(...nodes);
 }
 
 /** A <script> tag safe to place in HTML (no "</script>" breakouts). */

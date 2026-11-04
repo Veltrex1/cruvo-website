@@ -78,3 +78,19 @@ h1, h2, h3, h4, h5, h6 {
 html {
   scrollbar-width: none;
 }
+
+/* Marks sample proof copy (src/data/proof.js) in dev builds; samples never render in production. */
+.sample-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #FFC24B;
+  color: #161618;
+  font-size: 0.65rem;
+  font-weight: 800;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}

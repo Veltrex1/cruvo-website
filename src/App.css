@@ -75,6 +75,10 @@ section {
   .navbar-inner {
     display: flex !important;
     justify-content: space-between !important;
+    /* Desktop fades the bar in on scroll; on phones keep the menu button visible and tappable from the top. */
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
   }
 }
 

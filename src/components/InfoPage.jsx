@@ -227,6 +227,7 @@ export default function InfoPage({ currentPath, crumb, eyebrow, heading, lead, c
         <a href="/" className="info-logo" aria-label="Cruvo home" />
         <div className="info-nav-links">
           <a className="info-nav-link" href="/">Home</a>
+          <a className="info-nav-link" href="/pricing">Pricing</a>
           <a className="info-nav-link" href="/about">About</a>
           <a className="info-nav-link" href="/clubs">Clubs</a>
           <a className="info-nav-link" href="/support">Support</a>
