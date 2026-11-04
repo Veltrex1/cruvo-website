@@ -7,6 +7,7 @@ import { analytics } from '@heycatch/sdk';
 analytics.init({
   projectKey: 'hck_pk_B4AeyLvZUGS9UINnUZwkRYR5uhfyeV0I',
   site: 'landing',
+  requestBatching: false,
   install: {
     framework: 'vite-react',
     frameworkVersion: '19',
