@@ -15,10 +15,8 @@ import ClubsPage from './components/ClubsPage';
 import ContactPage from './components/ContactPage';
 import PricingPage from './components/PricingPage';
 import ComparePage from './components/ComparePage';
-import Testimonials from './components/Testimonials';
 import TrustStrip from './components/TrustStrip';
 import HomeFAQ from './components/HomeFAQ';
-import FounderBlock from './components/FounderBlock';
 import { COMPARISONS } from './data/comparisons';
 import AppStoreBadgeLink from './components/AppStoreBadgeLink';
 import GooglePlayBadgeLink from './components/GooglePlayBadgeLink';
@@ -259,11 +257,9 @@ function App() {
           <FeaturesGrid />
           <LiveRideSection />
           <AppShowcase />
-          <Testimonials />
           <TrustStrip />
           <PricingCards />
           <HomeFAQ />
-          <FounderBlock />
           <FooterCTA />
         </div>
       </div>

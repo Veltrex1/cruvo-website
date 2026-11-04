@@ -3,11 +3,9 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import PhoneMockup from './PhoneMockup';
 import AppStoreBadgeLink from './AppStoreBadgeLink';
 import GooglePlayBadgeLink from './GooglePlayBadgeLink';
-import { STORE_RATINGS, visible } from '../data/proof';
 
 export default function Hero() {
   const heroRef = useRef(null);
-  const ratings = visible(STORE_RATINGS);
 
   // Track scroll position within the hero section for parallax effects
   const { scrollYProgress } = useScroll({
@@ -86,28 +84,6 @@ export default function Hero() {
           text-shadow: 0 4px 20px rgba(0,0,0,0.5);
           line-height: 1.1;
         }
-        .hero-eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          margin: 0 0 1.25rem;
-          padding: 6px 14px;
-          border-radius: 999px;
-          background: rgba(229,78,87,0.16);
-          border: 1px solid rgba(229,78,87,0.35);
-          color: #FFC2C6;
-          font-size: 0.8rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-        .hero-eyebrow-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: var(--coral-red);
-          flex: 0 0 auto;
-        }
         .hero-garage {
           margin: -1.75rem 0 2.25rem;
           color: #fff;
@@ -116,18 +92,6 @@ export default function Hero() {
           max-width: 440px;
           line-height: 1.5;
         }
-        .hero-ratings {
-          flex-basis: 100%;
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.4rem 1.25rem;
-          margin: 0.25rem 0 0;
-          color: #ddd;
-          font-size: 0.9rem;
-          font-weight: 600;
-        }
-        .hero-stars { color: #FFC24B; }
-        .hero-ratings-count { color: #999; font-weight: 500; }
         .hero-buttons {
           display: flex;
           gap: 1rem;
@@ -173,19 +137,10 @@ export default function Hero() {
             font-size: 2.2rem !important;
             margin-bottom: 0.8rem !important;
           }
-          .hero-eyebrow {
-            font-size: 0.68rem;
-            margin-bottom: 0.9rem;
-            text-align: left;
-          }
           .hero-garage {
             margin: -0.75rem auto 1.25rem;
             font-size: 0.9rem;
             max-width: 320px;
-          }
-          .hero-ratings {
-            justify-content: center;
-            font-size: 0.8rem;
           }
           .hero-desc {
             font-size: 0.95rem !important;
@@ -225,16 +180,6 @@ export default function Hero() {
 
         {/* Left Content */}
         <div className="hero-left-content">
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="hero-eyebrow"
-          >
-            <span className="hero-eyebrow-dot" aria-hidden="true" />
-            Built for group rides, drives and club rideouts
-          </motion.p>
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -298,17 +243,6 @@ export default function Hero() {
               className="store-badge-link"
               imageClassName="google-play-badge"
             />
-            {ratings.length > 0 && (
-              <p className="hero-ratings">
-                {ratings.map((r) => (
-                  <span key={r.store}>
-                    <span className="hero-stars" aria-hidden="true">★</span> {r.rating.toFixed(1)} on {r.store}
-                    <span className="hero-ratings-count"> ({r.count} ratings)</span>
-                    {r.sample && <span className="sample-tag">Sample</span>}
-                  </span>
-                ))}
-              </p>
-            )}
             {/* <button className="btn-secondary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
               <Play size={20} /> Watch Video
             </button> */}
